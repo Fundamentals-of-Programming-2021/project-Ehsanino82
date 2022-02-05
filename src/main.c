@@ -10,6 +10,26 @@
 #include <time.h>
 #include <string.h>
 
+struct Soldier{
+    int x;
+    int y;
+    SDL_Point src;
+    SDL_Point dest;
+    bool is_attacking;
+    int id;
+};
+
+struct Base{
+    Sint16 x;
+    Sint16 y;
+    Uint32 color;
+    int number_of_soldiers;
+    int attacking_soldiers;
+    bool is_producing;
+    struct Soldier soldiers[200];
+    int id;
+};
+
 const int SCREEN_WIDTH = 780;
 const int SCREEN_HEIGHT = 560;
 const int FPS = 60;
@@ -26,6 +46,80 @@ SDL_Texture *getImageTexture(SDL_Renderer *sdlRenderer, char *image_path) {
     return texture;
 }
 
+void generate_random_base(struct Base bases[10], Uint32 colors[4]){
+    srand(time(0));
+    bases[0].x = 60;
+    bases[0].y = 60;
+    bases[0].color = colors[0];
+    bases[0].id = 0;
+    bases[0].number_of_soldiers = 0;
+    bases[0].attacking_soldiers = 0;
+    int flag = 0;
+    int i = 1;
+    int x, y;
+    for(i; i < 5; i++) {
+        x = rand() % 610 + 60;
+        y = rand() % 430 + 60;
+        if((x >= SCREEN_WIDTH / 2 - 50 && x <= SCREEN_WIDTH / 2 + 50) || (y >= SCREEN_HEIGHT / 2 - 30 && y <= SCREEN_HEIGHT / 2 + 50)) {
+            i--;
+            continue;
+        }
+        for (int j = 0; j < i; j++) {
+            if (pow(abs(x - bases[j].x),2) + pow(abs(y - bases[j].y),2) > 8000) {
+                flag++;
+                continue;
+            }else
+                break;
+        }if(flag == i) {
+            bases[i].x = x;
+            bases[i].y = y;
+            bases[i].color = colors[0];
+            bases[i].id = 0;
+            bases[i].number_of_soldiers = 0;
+            bases[i].attacking_soldiers = 0;
+        }else {
+            i--;
+            flag = 0;
+        }
+    }
+    flag = 0;
+    for(i; i < 20; i++){
+        int z = 1 + rand()%3;
+        x = rand() % 610 + 50;
+        y = rand() % 430 + 50;
+        if((x >= SCREEN_WIDTH / 2 - 60 && x <= SCREEN_WIDTH / 2 + 60) || (y >= SCREEN_HEIGHT / 2 - 40 && y <= SCREEN_HEIGHT / 2 + 60)) {
+            i--;
+            continue;
+        }
+        for (int j = 0; j < i; j++) {
+            if (pow(x - bases[j].x,2) + pow(y - bases[j].y,2) > 8000) {
+                flag++;
+                continue;
+            }else
+                break;
+        }if(flag == i) {
+            bases[i].x = x;
+            bases[i].y = y;
+            bases[i].color = colors[z];
+            bases[i].id = z;
+            bases[i].number_of_soldiers = 0;
+            bases[i].attacking_soldiers = 0;
+        }else {
+            i--;
+            flag = 0;
+        }
+    }
+}
+
+void draw_bases(SDL_Renderer *sdlRenderer, struct Base base) {
+    Sint16 vx[6] = {base.x-30, base.x-15,base.x+15, base.x+30, base.x+15, base.x-15};
+    Sint16 vy[6] = {base.y, base.y-20, base.y-20, base.y, base.y+20, base.y+20};
+    filledPolygonColor(sdlRenderer, vx, vy, 6, base.color);
+    char soldiers[3];
+    itoa(base.number_of_soldiers, soldiers, 10);
+    stringColor(sdlRenderer, base.x, base.y, soldiers, 0xffaa0000);
+}
+
 int main() {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -39,7 +133,6 @@ int main() {
     //loading phase end=================================================================================================
     SDL_Window *sdlWindow = SDL_CreateWindow("State.io", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH,
                                              SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
-
     SDL_Renderer *sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     SDL_Texture *sdlTexture = getImageTexture(sdlRenderer, "../loading screen.bmp");
     SDL_Texture *sdlTexture2 = getImageTexture(sdlRenderer, "../input name.bmp");
@@ -47,6 +140,9 @@ int main() {
     SDL_Rect texture_rect = {.x=0, .y=0, .w=SCREEN_WIDTH, .h=SCREEN_HEIGHT};
     char username[100] = "";
     SDL_StartTextInput();
+
+    struct Base bases[20];
+    Uint32 colors[4] = {0xff21218c, 0xff8c6121, 0xff31dbc6, 0xffdbd131};
 
     Sint16 x1 = 100, x2 = 110;
     Sint16 y1 = 350, y2 = 380;
@@ -95,6 +191,9 @@ int main() {
         }
         //menu page end=================================================================================================
         else if(stage == 3){
+            for(int i = 0; i < 20; i++) {
+                draw_bases(sdlRenderer, bases[i]);
+            }
             // code must be completed to play the game
         }
         //maps page=====================================================================================================
@@ -136,7 +235,7 @@ int main() {
                     if(500 <= sdlEvent.button.x && 670 >= sdlEvent.button.x && 340 <= sdlEvent.button.y && 370 >= sdlEvent.button.y) {
                         stage = 3;
                         sdlTexture = sdlTexture3;
-                        // code must be completed to start the game
+                        generate_random_base(bases, colors);
                     }
                     else if(500 <= sdlEvent.button.x && 670 >= sdlEvent.button.x && 380 <= sdlEvent.button.y && 410 >= sdlEvent.button.y)
                         stage = 4;
