@@ -143,6 +143,274 @@ void generate_random_base(struct Base bases[10], Uint32 colors[5], Uint32 colors
     }
 }
 
+void generate_bases1(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5]) {
+    for(int i = 0; i < 8; i++){
+        bases[i].x = 200;
+        bases[i].y = 35 + (i * 70);
+        bases[i].color = colors[0];
+        bases[i].color2 = colors2[0];
+        bases[i].id = 0;
+        bases[i].number_of_soldiers = 0;
+        bases[i].attacking_soldiers = 0;
+    }
+    for(int i = 0; i < 4; i++){
+        bases[i + 16].x = 390;
+        if(i < 2)
+            bases[i + 16].y = 75 + (i * 70);
+        else
+            bases[i + 16].y = 275 + (i * 70);
+        bases[i + 16].color = colors[4];
+        bases[i + 16].color2 = colors2[4];
+        bases[i + 16].id = 4;
+        bases[i + 16].number_of_soldiers = 30;
+        bases[i + 16].attacking_soldiers = 0;
+    }
+    for(int i = 0; i < 8; i++){
+        bases[i + 8].x = 580;
+        bases[i + 8].y = 35 + (i * 70);
+        bases[i + 8].color = colors[3];
+        bases[i + 8].color2 = colors2[3];
+        bases[i + 8].id = 3;
+        bases[i + 8].number_of_soldiers = 0;
+        bases[i + 8].attacking_soldiers = 0;
+    }
+}
+
+void generate_bases2(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5]) {
+    for(int i = 0; i < 5; i++){
+        if(i < 2) {
+            bases[i].x = 350 + ((i % 2) * 70);
+            bases[i].y = 50;
+        }else if(i == 2) {
+            bases[i].x = 385;
+            bases[i].y = 110;
+        }else{
+            bases[i].x = 350 + ((i % 2) * 70);
+            bases[i].y = 170;
+        }
+        bases[i].color = colors[0];
+        bases[i].color2 = colors2[0];
+        bases[i].id = 0;
+        bases[i].number_of_soldiers = 0;
+        bases[i].attacking_soldiers = 0;
+    }
+    for(int i = 0; i < 5; i++){
+        if(i < 2) {
+            bases[i + 5].x = 50 + ((i % 2) * 70);
+            bases[i + 5].y = 380;
+        }else if(i == 2) {
+            bases[i + 5].x = 85;
+            bases[i + 5].y = 440;
+        }else{
+            bases[i + 5].x = 50 + ((i % 2) * 70);
+            bases[i + 5].y = 500;
+        }
+        bases[i + 5].color = colors[1];
+        bases[i + 5].color2 = colors2[1];
+        bases[i + 5].id = 1;
+        bases[i + 5].number_of_soldiers = 0;
+        bases[i + 5].attacking_soldiers = 0;
+    }
+    for(int i = 0; i < 5; i++){
+        if(i < 2) {
+            bases[i + 10].x = 660 + ((i % 2) * 70);
+            bases[i + 10].y = 380;
+        }else if(i == 2) {
+            bases[i + 10].x = 695;
+            bases[i + 10].y = 440;
+        }else{
+            bases[i + 10].x = 660 + ((i % 2) * 70);
+            bases[i + 10].y = 500;
+        }
+        bases[i + 10].color = colors[2];
+        bases[i + 10].color2 = colors2[2];
+        bases[i + 10].id = 2;
+        bases[i + 10].number_of_soldiers = 0;
+        bases[i + 10].attacking_soldiers = 0;
+    }
+    for(int i = 0; i < 5; i++){
+        if(i < 3) {
+            bases[i + 15].x = 325 + ((i % 3) * 70);
+            bases[i + 15].y = 380;
+        }else{
+            bases[i + 15].x = 360 + ((i % 2) * 70);
+            bases[i + 15].y = 440;
+        }
+        bases[i + 15].color = colors[4];
+        bases[i + 15].color2 = colors2[4];
+        bases[i + 15].id = 4;
+        bases[i + 15].number_of_soldiers = 30;
+        bases[i + 15].attacking_soldiers = 0;
+    }
+}
+
+void generate_bases3(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5]) {
+    for(int i = 0; i < 4; i++){
+        if(i < 1) {
+            bases[i].x = 120;
+            bases[i].y = 50;
+        }else if(i > 2) {
+            bases[i].x = 120;
+            bases[i].y = 170;
+        }else{
+            bases[i].x = 55 + ((i % 2) * 130);
+            bases[i].y = 110;
+        }
+        bases[i].color = colors[0];
+        bases[i].color2 = colors2[0];
+        bases[i].id = 0;
+        bases[i].number_of_soldiers = 0;
+        bases[i].attacking_soldiers = 0;
+    }
+    for(int i = 0; i < 4; i++){
+        if(i < 1) {
+            bases[i + 4].x = 120;
+            bases[i + 4].y = 390;
+        }else if(i > 2) {
+            bases[i + 4].x = 120;
+            bases[i + 4].y = 510;
+        }else{
+            bases[i + 4].x = 55  + ((i % 2) * 130);
+            bases[i + 4].y = 450;
+        }
+        bases[i + 4].color = colors[1];
+        bases[i + 4].color2 = colors2[1];
+        bases[i + 4].id = 1;
+        bases[i + 4].number_of_soldiers = 0;
+        bases[i + 4].attacking_soldiers = 0;
+    }
+    for(int i = 0; i < 4; i++){
+        if(i < 1) {
+            bases[i + 8].x = 660;
+            bases[i + 8].y = 50;
+        }else if(i > 2) {
+            bases[i + 8].x = 660;
+            bases[i + 8].y = 170;
+        }else{
+            bases[i + 8].x = 595 + ((i % 2) * 130);
+            bases[i + 8].y = 110;
+        }
+        bases[i + 8].color = colors[2];
+        bases[i + 8].color2 = colors2[2];
+        bases[i + 8].id = 2;
+        bases[i + 8].number_of_soldiers = 0;
+        bases[i + 8].attacking_soldiers = 0;
+    }
+    for(int i = 0; i < 4; i++){
+        if(i < 1) {
+            bases[i + 12].x = 660;
+            bases[i + 12].y = 390;
+        }else if(i > 2) {
+            bases[i + 12].x = 660;
+            bases[i + 12].y = 510;
+        }else{
+            bases[i + 12].x = 595  + ((i % 2) * 130);
+            bases[i + 12].y = 450;
+        }
+        bases[i + 12].color = colors[3];
+        bases[i + 12].color2 = colors2[3];
+        bases[i + 12].id = 3;
+        bases[i + 12].number_of_soldiers = 0;
+        bases[i + 12].attacking_soldiers = 0;
+    }
+    for(int i = 0; i < 4; i++){
+        if(i < 1) {
+            bases[i + 16].x = 390;
+            bases[i + 16].y = 110;
+        }else if(i > 2) {
+            bases[i + 16].x = 390;
+            bases[i + 16].y = 450;
+        }else{
+            bases[i + 16].x = 120  + ((i % 2) * 540);
+            bases[i + 16].y = 280;
+        }
+        bases[i + 16].color = colors[4];
+        bases[i + 16].color2 = colors2[4];
+        bases[i + 16].id = 4;
+        bases[i + 16].number_of_soldiers = 30;
+        bases[i + 16].attacking_soldiers = 0;
+    }
+}
+
+void generate_bases4(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5]) {
+    for(int i = 0; i < 4; i++){
+        if(i < 2) {
+            bases[i].x = 120 + ((i % 2) * 540);
+            bases[i].y = 50;
+        }else{
+            bases[i].x = 120 + ((i % 2) * 540);
+            bases[i].y = 510;
+        }
+        bases[i].color = colors[0];
+        bases[i].color2 = colors2[0];
+        bases[i].id = 0;
+        bases[i].number_of_soldiers = 0;
+        bases[i].attacking_soldiers = 0;
+    }
+    for(int i = 0; i < 4; i++){
+        if(i < 2) {
+            bases[i + 4].x = 220 + ((i % 2) * 340);
+            bases[i + 4].y = 150;
+        }else{
+            bases[i + 4].x = 220 + ((i % 2) * 340);
+            bases[i + 4].y = 410;
+        }
+        bases[i + 4].color = colors[1];
+        bases[i + 4].color2 = colors2[1];
+        bases[i + 4].id = 1;
+        bases[i + 4].number_of_soldiers = 0;
+        bases[i + 4].attacking_soldiers = 0;
+    }
+    for(int i = 0; i < 4; i++){
+        if(i < 1) {
+            bases[i + 8].x = 390;
+            bases[i + 8].y = 50;
+        }else if(i > 2) {
+            bases[i + 8].x = 390;
+            bases[i + 8].y = 510;
+        }else{
+            bases[i + 8].x = 120 + ((i % 2) * 540);
+            bases[i + 8].y = 280;
+        }
+        bases[i + 8].color = colors[2];
+        bases[i + 8].color2 = colors2[2];
+        bases[i + 8].id = 2;
+        bases[i + 8].number_of_soldiers = 0;
+        bases[i + 8].attacking_soldiers = 0;
+    }
+    for(int i = 0; i < 4; i++){
+        if(i < 1) {
+            bases[i + 12].x = 390;
+            bases[i + 12].y = 150;
+        }else if(i > 2) {
+            bases[i + 12].x = 390;
+            bases[i + 12].y = 410;
+        }else{
+            bases[i + 12].x = 220  + ((i % 2) * 340);
+            bases[i + 12].y = 280;
+        }
+        bases[i + 12].color = colors[3];
+        bases[i + 12].color2 = colors2[3];
+        bases[i + 12].id = 3;
+        bases[i + 12].number_of_soldiers = 0;
+        bases[i + 12].attacking_soldiers = 0;
+    }
+    for(int i = 0; i < 4; i++){
+        if(i < 2) {
+            bases[i + 16].x = 120 + ((i % 2) * 540);
+            bases[i + 16].y = 150;
+        }else{
+            bases[i + 16].x = 120 + ((i % 2) * 540);
+            bases[i + 16].y = 410;
+        }
+        bases[i + 16].color = colors[4];
+        bases[i + 16].color2 = colors2[4];
+        bases[i + 16].id = 4;
+        bases[i + 16].number_of_soldiers = 30;
+        bases[i + 16].attacking_soldiers = 0;
+    }
+}
+
 void draw_bases(SDL_Renderer *sdlRenderer, struct Base base) {
     Sint16 vx[6] = {base.x-30, base.x-15,base.x+15, base.x+30, base.x+15, base.x-15};
     Sint16 vy[6] = {base.y, base.y - (15 * sqrt(3)), base.y - (15 * sqrt(3)), base.y, base.y + (15 * sqrt(3)), base.y + (15 * sqrt(3))};
@@ -225,6 +493,23 @@ void draw_soldiers(SDL_Renderer *sdlRenderer, struct Base* base, struct Base bas
         }else
             continue;
     }
+}
+
+int check_win(struct Base bases[20]){
+    int flag = 0;
+    int flag2 = 0;
+    for(int i = 0; i < 20; i++){
+        if(bases[i].id == 0)
+            flag++;
+        if(bases[i].id >= 1 && bases[i].id <= 3)
+            flag2++;
+    }
+    if(flag == 0)
+        return 2;
+    else if(flag2 == 0)
+        return 1;
+    else
+        return 0;
 }
 
 void artificial_intelligence(struct Base bases[20]){
@@ -330,10 +615,15 @@ void check_collision(struct Base bases[20]){
             if(bases[i].id == bases[j].id)
                 continue;
             for(int k = 0; k < bases[i].attacking_soldiers; k++){
-                for(int z = 0; z < bases[j].attacking_soldiers; z++){
-                    if(pow(bases[i].soldiers[k].y - bases[j].soldiers[z].y, 2) + pow(bases[i].soldiers[k].x - bases[j].soldiers[z].x, 2) <= 10){
-                        bases[i].soldiers[k].is_attacking = false;
-                        bases[j].soldiers[z].is_attacking = false;
+                if(bases[i].soldiers[k].is_attacking) {
+                    for (int z = 0; z < bases[j].attacking_soldiers; z++) {
+                        if(bases[j].soldiers[z].is_attacking) {
+                            if (pow(bases[i].soldiers[k].y - bases[j].soldiers[z].y, 2) +
+                                pow(bases[i].soldiers[k].x - bases[j].soldiers[z].x, 2) <= 6) {
+                                bases[i].soldiers[k].is_attacking = false;
+                                bases[j].soldiers[z].is_attacking = false;
+                            }
+                        }
                     }
                 }
             }
@@ -356,11 +646,12 @@ int main() {
                                              SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
     SDL_Renderer *sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     SDL_Texture *sdlTexture = getImageTexture(sdlRenderer, "../loading screen.bmp");
-    SDL_Texture *sdlTexture2 = getImageTexture(sdlRenderer, "../input name.bmp");
+    SDL_Texture *sdlTexture2 = getImageTexture(sdlRenderer, "../menu.bmp");
     SDL_Texture *sdlTexture3 = getImageTexture(sdlRenderer, "../game.bmp");
     SDL_Texture *sdlTexture4 = getImageTexture(sdlRenderer, "../victory.bmp");
     SDL_Texture *sdlTexture5 = getImageTexture(sdlRenderer, "../loose.bmp");
     SDL_Rect texture_rect = {.x=0, .y=0, .w=SCREEN_WIDTH, .h=SCREEN_HEIGHT};
+    SDL_Rect texture_rect2 = {.x=20, .y=20, .w=510, .h=500};
     char username[100] = "";
     SDL_StartTextInput();
 
@@ -372,17 +663,16 @@ int main() {
     Sint16 x3 = 390;
     Sint16 y3 = 280;
     int t=0;
-    int r=0;
     int flag = 0;
     int first = 0;
     SDL_bool shallExit = SDL_FALSE;
     while (shallExit == SDL_FALSE) {
         SDL_SetRenderDrawColor(sdlRenderer, 0xff, 0xff, 0xff, 0xff);
         SDL_RenderClear(sdlRenderer);
-        SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect);
 
         //loading page==================================================================================================
         if(stage == 0) {
+            SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect);
             Uint32 color = 0xff8c6121;
             x2++;
             if (x2 == 130 || x2 == 170 || x2 == 200)
@@ -402,22 +692,25 @@ int main() {
         //loading page end==============================================================================================
         //get username page=============================================================================================
         else if(stage == 1){
-            stringColor(sdlRenderer, 510, 355, "Enter your username below:", 0xff8c6121);
-            roundedRectangleColor(sdlRenderer, 510, 375, 700, 405, 10, 0xff8c6121);
-            stringColor(sdlRenderer, 570, 385, username, 0xff8c6121);
+            SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect2);
+            stringColor(sdlRenderer, 540, 285, "Enter your username below:", 0xff8c6121);
+            roundedRectangleColor(sdlRenderer, 545, 305, 735, 335, 10, 0xff8c6121);
+            stringColor(sdlRenderer, 600, 315, username, 0xff8c6121);
         }
         //get username page end=========================================================================================
         //menu page=====================================================================================================
         else if(stage == 2){
-            roundedRectangleColor(sdlRenderer, 500, 340, 670, 370, 10, 0xff8c6121);
-            stringColor(sdlRenderer, 555, 350, "New Game", 0xff8c6121);
-            roundedRectangleColor(sdlRenderer, 500, 380, 670, 410, 10, 0xff8c6121);
-            stringColor(sdlRenderer, 567, 390, "Maps", 0xff8c6121);
-            roundedRectangleColor(sdlRenderer, 500, 420, 670, 450, 10, 0xff8c6121);
-            stringColor(sdlRenderer, 543, 430, "Leaderboard", 0xff8c6121);
+            SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect2);
+            roundedRectangleColor(sdlRenderer, 560, 265, 730, 295, 10, 0xff8c6121);
+            stringColor(sdlRenderer, 615, 275, "New Game", 0xff8c6121);
+            roundedRectangleColor(sdlRenderer, 560, 305, 730, 335, 10, 0xff8c6121);
+            stringColor(sdlRenderer, 627, 315, "Maps", 0xff8c6121);
+            roundedRectangleColor(sdlRenderer, 560, 345, 730, 375, 10, 0xff8c6121);
+            stringColor(sdlRenderer, 603, 355, "Leaderboard", 0xff8c6121);
         }
         //menu page end=================================================================================================
         else if(stage == 3){
+            SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect);
             artificial_intelligence(bases);
             if(t % 50 == 0) {
                 for (int i = 0; i < 20; i++) {
@@ -430,29 +723,57 @@ int main() {
                 check_collision(bases);
                 draw_soldiers(sdlRenderer, &bases[i], bases);
             }
+            switch (check_win(bases)) {
+                case 0:
+                    break;
+                case 1:
+                    sdlTexture = sdlTexture4;
+                    stage = 6; //win
+                    break;
+                case 2:
+                    sdlTexture = sdlTexture5;
+                    stage = 7; //loose
+                    break;
+                default:
+                    break;
+            }
             // code must be completed to play the game
         }
         //maps page=====================================================================================================
         else if(stage == 4){
-            roundedRectangleColor(sdlRenderer, 500, 310, 670, 340, 10, 0xff8c6121);
-            stringColor(sdlRenderer, 567, 320, "Map 1", 0xff8c6121);
-            roundedRectangleColor(sdlRenderer, 500, 350, 670, 380, 10, 0xff8c6121);
-            stringColor(sdlRenderer, 567, 360, "Map 2", 0xff8c6121);
-            roundedRectangleColor(sdlRenderer, 500, 390, 670, 420, 10, 0xff8c6121);
-            stringColor(sdlRenderer, 567, 400, "Map 3", 0xff8c6121);
-            roundedRectangleColor(sdlRenderer, 500, 430, 670, 460, 10, 0xff8c6121);
-            stringColor(sdlRenderer, 567, 440, "Map 4", 0xff8c6121);
-            roundedRectangleColor(sdlRenderer, 630, 520, 770, 550, 10, 0xff8c6121);
-            stringColor(sdlRenderer, 655, 530, "Back to menu", 0xff8c6121);
+            SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect2);
+            roundedRectangleColor(sdlRenderer, 560, 250, 730, 280, 10, 0xff8c6121);
+            stringColor(sdlRenderer, 627, 260, "Map 1", 0xff8c6121);
+            roundedRectangleColor(sdlRenderer, 560, 290, 730, 320, 10, 0xff8c6121);
+            stringColor(sdlRenderer, 627, 300, "Map 2", 0xff8c6121);
+            roundedRectangleColor(sdlRenderer, 560, 330, 730, 360, 10, 0xff8c6121);
+            stringColor(sdlRenderer, 627, 340, "Map 3", 0xff8c6121);
+            roundedRectangleColor(sdlRenderer, 560, 370, 730, 400, 10, 0xff8c6121);
+            stringColor(sdlRenderer, 627, 380, "Map 4", 0xff8c6121);
+            roundedRectangleColor(sdlRenderer, 630, 490, 770, 520, 10, 0xff8c6121);
+            stringColor(sdlRenderer, 655, 500, "Back to menu", 0xff8c6121);
         }
         //maps page end=================================================================================================
         //Leaderboard page==============================================================================================
         else if(stage == 5){
             // code must be completed to show the leaderboard
+            SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect2);
+            stringColor(sdlRenderer, 580, 265, "Best Of Bests:", 0xff8c6121);
+            roundedRectangleColor(sdlRenderer, 545, 285, 735, 315, 10, 0xff8c6121);
+            roundedRectangleColor(sdlRenderer, 630, 490, 770, 520, 10, 0xff8c6121);
+            stringColor(sdlRenderer, 655, 500, "Back to menu", 0xff8c6121);
+        }
+        //Leaderboard page end==========================================================================================
+        else if(stage == 6){
+            SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect);
             roundedRectangleColor(sdlRenderer, 630, 520, 770, 550, 10, 0xff8c6121);
             stringColor(sdlRenderer, 655, 530, "Back to menu", 0xff8c6121);
         }
-        //Leaderboard page end==========================================================================================
+        else if(stage == 7){
+            SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect);
+            roundedRectangleColor(sdlRenderer, 630, 520, 770, 550, 10, 0xff8c6121);
+            stringColor(sdlRenderer, 655, 530, "Back to menu", 0xff8c6121);
+        }
         SDL_Event sdlEvent;
         while (SDL_PollEvent(&sdlEvent)) {
             if(sdlEvent.type == SDL_QUIT)
@@ -504,33 +825,44 @@ int main() {
                     if(500 <= sdlEvent.button.x && 670 >= sdlEvent.button.x && 310 <= sdlEvent.button.y && 340 >= sdlEvent.button.y) {
                         stage = 3;
                         sdlTexture = sdlTexture3;
-                        // code must be completed to start the game
+                        generate_bases1(bases, colors, colors2);
                     }
                     else if(500 <= sdlEvent.button.x && 670 >= sdlEvent.button.x && 350 <= sdlEvent.button.y && 380 >= sdlEvent.button.y) {
                         stage = 3;
                         sdlTexture = sdlTexture3;
-                        // code must be completed to start the game
+                        generate_bases2(bases, colors, colors2);
                     }
                     else if(500 <= sdlEvent.button.x && 670 >= sdlEvent.button.x && 390 <= sdlEvent.button.y && 420 >= sdlEvent.button.y) {
                         stage = 3;
                         sdlTexture = sdlTexture3;
-                        // code must be completed to start the game
+                        generate_bases3(bases, colors, colors2);
                     }
                     else if(500 <= sdlEvent.button.x && 670 >= sdlEvent.button.x && 430 <= sdlEvent.button.y && 460 >= sdlEvent.button.y) {
                         stage = 3;
                         sdlTexture = sdlTexture3;
-                        // code must be completed to start the game
+                        generate_bases4(bases, colors, colors2);
                     }
                     else if(630 <= sdlEvent.button.x && 770 >= sdlEvent.button.x && 520 <= sdlEvent.button.y && 550 >= sdlEvent.button.y)
                         stage = 2;
                 }else if(stage == 5){
                     if(630 <= sdlEvent.button.x && 770 >= sdlEvent.button.x && 520 <= sdlEvent.button.y && 550 >= sdlEvent.button.y)
                         stage = 2;
+                }else if(stage == 6) {
+                    if (630 <= sdlEvent.button.x && 770 >= sdlEvent.button.x && 520 <= sdlEvent.button.y && 550 >= sdlEvent.button.y) {
+                        sdlTexture = sdlTexture2;
+                        stage = 2;
+                    }
+                }else if(stage == 7) {
+                    if (630 <= sdlEvent.button.x && 770 >= sdlEvent.button.x && 520 <= sdlEvent.button.y && 550 >= sdlEvent.button.y) {
+                        sdlTexture = sdlTexture2;
+                        stage = 2;
+                    }
                 }
             }
         }
         SDL_RenderPresent(sdlRenderer);
         SDL_Delay(1000 / FPS);
+        t++;
     }
 
     SDL_StopTextInput();
