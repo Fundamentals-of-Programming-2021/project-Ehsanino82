@@ -789,14 +789,14 @@ int main() {
             }
             else if(sdlEvent.type == SDL_MOUSEBUTTONDOWN){
                 if(stage == 2){
-                    if(500 <= sdlEvent.button.x && 670 >= sdlEvent.button.x && 340 <= sdlEvent.button.y && 370 >= sdlEvent.button.y) {
+                    if(560 <= sdlEvent.button.x && 730 >= sdlEvent.button.x && 265 <= sdlEvent.button.y && 295 >= sdlEvent.button.y) {
                         stage = 3;
                         sdlTexture = sdlTexture3;
                         generate_random_base(bases, colors, colors2);
                     }
-                    else if(500 <= sdlEvent.button.x && 670 >= sdlEvent.button.x && 380 <= sdlEvent.button.y && 410 >= sdlEvent.button.y)
+                    else if(560 <= sdlEvent.button.x && 730 >= sdlEvent.button.x && 305 <= sdlEvent.button.y && 335 >= sdlEvent.button.y)
                         stage = 4;
-                    else if(500 <= sdlEvent.button.x && 670 >= sdlEvent.button.x && 420 <= sdlEvent.button.y && 450 >= sdlEvent.button.y)
+                    else if(560 <= sdlEvent.button.x && 730 >= sdlEvent.button.x && 345 <= sdlEvent.button.y && 375 >= sdlEvent.button.y)
                         stage = 5;
                 }else if(stage == 3){
                     for(int i = 0; i < 20; i++){
@@ -822,30 +822,30 @@ int main() {
                         }
                     }
                 }else if(stage == 4){
-                    if(500 <= sdlEvent.button.x && 670 >= sdlEvent.button.x && 310 <= sdlEvent.button.y && 340 >= sdlEvent.button.y) {
+                    if(560 <= sdlEvent.button.x && 730 >= sdlEvent.button.x && 250 <= sdlEvent.button.y && 280 >= sdlEvent.button.y) {
                         stage = 3;
                         sdlTexture = sdlTexture3;
                         generate_bases1(bases, colors, colors2);
                     }
-                    else if(500 <= sdlEvent.button.x && 670 >= sdlEvent.button.x && 350 <= sdlEvent.button.y && 380 >= sdlEvent.button.y) {
+                    else if(560 <= sdlEvent.button.x && 730 >= sdlEvent.button.x && 290 <= sdlEvent.button.y && 320 >= sdlEvent.button.y) {
                         stage = 3;
                         sdlTexture = sdlTexture3;
                         generate_bases2(bases, colors, colors2);
                     }
-                    else if(500 <= sdlEvent.button.x && 670 >= sdlEvent.button.x && 390 <= sdlEvent.button.y && 420 >= sdlEvent.button.y) {
+                    else if(560 <= sdlEvent.button.x && 730 >= sdlEvent.button.x && 330 <= sdlEvent.button.y && 360 >= sdlEvent.button.y) {
                         stage = 3;
                         sdlTexture = sdlTexture3;
                         generate_bases3(bases, colors, colors2);
                     }
-                    else if(500 <= sdlEvent.button.x && 670 >= sdlEvent.button.x && 430 <= sdlEvent.button.y && 460 >= sdlEvent.button.y) {
+                    else if(560 <= sdlEvent.button.x && 730 >= sdlEvent.button.x && 370 <= sdlEvent.button.y && 400 >= sdlEvent.button.y) {
                         stage = 3;
                         sdlTexture = sdlTexture3;
                         generate_bases4(bases, colors, colors2);
                     }
-                    else if(630 <= sdlEvent.button.x && 770 >= sdlEvent.button.x && 520 <= sdlEvent.button.y && 550 >= sdlEvent.button.y)
+                    else if(630 <= sdlEvent.button.x && 770 >= sdlEvent.button.x && 490 <= sdlEvent.button.y && 520 >= sdlEvent.button.y)
                         stage = 2;
                 }else if(stage == 5){
-                    if(630 <= sdlEvent.button.x && 770 >= sdlEvent.button.x && 520 <= sdlEvent.button.y && 550 >= sdlEvent.button.y)
+                    if(630 <= sdlEvent.button.x && 770 >= sdlEvent.button.x && 490 <= sdlEvent.button.y && 520 >= sdlEvent.button.y)
                         stage = 2;
                 }else if(stage == 6) {
                     if (630 <= sdlEvent.button.x && 770 >= sdlEvent.button.x && 520 <= sdlEvent.button.y && 550 >= sdlEvent.button.y) {
