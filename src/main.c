@@ -28,7 +28,6 @@ struct Base{
     Uint32 color2;
     int number_of_soldiers;
     int attacking_soldiers;
-    bool is_producing;
     struct Soldier soldiers[200];
     int id;
 };
@@ -228,6 +227,120 @@ void draw_soldiers(SDL_Renderer *sdlRenderer, struct Base* base, struct Base bas
     }
 }
 
+void artificial_intelligence(struct Base bases[20]){
+    srand(time(0));
+    int x;
+    for(int i = 0; i < 20; i++){
+        if(i % 4 == 0 && bases[i].id != 0 && bases[i].id != 4) {
+            x = rand() % 20;
+            if (bases[i].number_of_soldiers >= 17) {
+                for (int j = 0; j < bases[i].number_of_soldiers; j++) {
+                    bases[i].soldiers[j].src.x = bases[i].x;
+                    bases[i].soldiers[j].src.y = bases[i].y;
+                    bases[i].soldiers[j].dest.x = bases[x].x;
+                    bases[i].soldiers[j].dest.y = bases[x].y;
+                    bases[i].soldiers[j].dest2.x = bases[x].x;
+                    bases[i].soldiers[j].dest2.y = bases[x].y;
+                }
+                attack(&bases[i]);
+                bases[i].attacking_soldiers = bases[i].number_of_soldiers;
+                bases[i].number_of_soldiers = 0;
+            }
+        }else if(i % 4 == 1 && bases[i].id != 0 && bases[i].id != 4) {
+            if (bases[i].number_of_soldiers >= 22) {
+                for (int j = 0; j < 20; j++) {
+                    if (bases[j].number_of_soldiers <= (bases[i].number_of_soldiers / 2) && bases[j].id != bases[i].id) {
+                        for (int k = 0; k < bases[i].number_of_soldiers; k++) {
+                            bases[i].soldiers[k].src.x = bases[i].x;
+                            bases[i].soldiers[k].src.y = bases[i].y;
+                            bases[i].soldiers[k].dest.x = bases[j].x;
+                            bases[i].soldiers[k].dest.y = bases[j].y;
+                            bases[i].soldiers[k].dest2.x = bases[j].x;
+                            bases[i].soldiers[k].dest2.y = bases[j].y;
+                        }
+                        attack(&bases[i]);
+                        bases[i].attacking_soldiers = bases[i].number_of_soldiers;
+                        bases[i].number_of_soldiers = 0;
+                        break;
+                    }
+                }
+            }
+        }else if(i % 4 == 2 && bases[i].id != 0 && bases[i].id != 4){
+            if(bases[i].number_of_soldiers >= 28){
+                for(int j = 0; j < 20; j++){
+                    if(bases[j].number_of_soldiers <= (bases[i].number_of_soldiers / 2) && bases[j].id != bases[i].id) {
+                        for (int k = 0; k < bases[i].number_of_soldiers; k++) {
+                            bases[i].soldiers[k].src.x = bases[i].x;
+                            bases[i].soldiers[k].src.y = bases[i].y;
+                            bases[i].soldiers[k].dest.x = bases[j].x;
+                            bases[i].soldiers[k].dest.y = bases[j].y;
+                            bases[i].soldiers[k].dest2.x = bases[j].x;
+                            bases[i].soldiers[k].dest2.y = bases[j].y;
+                        }
+                        attack(&bases[i]);
+                        bases[i].attacking_soldiers = bases[i].number_of_soldiers;
+                        bases[i].number_of_soldiers = 0;
+                        break;
+                    }
+                }
+            }
+        }else if(i % 4 == 3 && bases[i].id != 0 && bases[i].id != 4){
+            if(bases[i].number_of_soldiers >= 9) {
+                for (int j = 0; j < 20; j++) {
+                    if (bases[j].number_of_soldiers <= bases[i].number_of_soldiers && bases[j].id != bases[i].id) {
+                        for (int k = 0; k < bases[i].number_of_soldiers; k++) {
+                            bases[i].soldiers[k].src.x = bases[i].x;
+                            bases[i].soldiers[k].src.y = bases[i].y;
+                            bases[i].soldiers[k].dest.x = bases[j].x;
+                            bases[i].soldiers[k].dest.y = bases[j].y;
+                            bases[i].soldiers[k].dest2.x = bases[j].x;
+                            bases[i].soldiers[k].dest2.y = bases[j].y;
+                        }
+                        attack(&bases[i]);
+                        bases[i].attacking_soldiers = bases[i].number_of_soldiers;
+                        bases[i].number_of_soldiers = 0;
+                        break;
+                    }
+                }
+            }
+        }else if(bases[i].id != 0 && bases[i].id != 4 && bases[i].number_of_soldiers >= 30){
+            for (int j = 0; j < 20; j++) {
+                if (bases[j].number_of_soldiers < bases[i].number_of_soldiers && bases[j].id != bases[i].id) {
+                    for (int k = 0; k < bases[i].number_of_soldiers; k++) {
+                        bases[i].soldiers[k].src.x = bases[i].x;
+                        bases[i].soldiers[k].src.y = bases[i].y;
+                        bases[i].soldiers[k].dest.x = bases[j].x;
+                        bases[i].soldiers[k].dest.y = bases[j].y;
+                        bases[i].soldiers[k].dest2.x = bases[j].x;
+                        bases[i].soldiers[k].dest2.y = bases[j].y;
+                    }
+                    attack(&bases[i]);
+                    bases[i].attacking_soldiers = bases[i].number_of_soldiers;
+                    bases[i].number_of_soldiers = 0;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void check_collision(struct Base bases[20]){
+    for(int i = 0; i < 20; i++){
+        for(int j = 0; j < 20; j++){
+            if(bases[i].id == bases[j].id)
+                continue;
+            for(int k = 0; k < bases[i].attacking_soldiers; k++){
+                for(int z = 0; z < bases[j].attacking_soldiers; z++){
+                    if(pow(bases[i].soldiers[k].y - bases[j].soldiers[z].y, 2) + pow(bases[i].soldiers[k].x - bases[j].soldiers[z].x, 2) <= 10){
+                        bases[i].soldiers[k].is_attacking = false;
+                        bases[j].soldiers[z].is_attacking = false;
+                    }
+                }
+            }
+        }
+    }
+}
+
 int main() {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -274,7 +387,6 @@ int main() {
             x2++;
             if (x2 == 130 || x2 == 170 || x2 == 200)
                 SDL_Delay(1000);
-
             roundedBoxColor(sdlRenderer, x1, y1, x2, y2, 8, color);
             stringColor(sdlRenderer, 100, 395, "loading:", 0xff8c6121);
             stringColor(sdlRenderer, 165, 395, loading, 0xff8c6121);
@@ -306,6 +418,7 @@ int main() {
         }
         //menu page end=================================================================================================
         else if(stage == 3){
+            artificial_intelligence(bases);
             if(t % 50 == 0) {
                 for (int i = 0; i < 20; i++) {
                     if (bases[i].number_of_soldiers < 30 && bases[i].id != 4)
@@ -314,6 +427,7 @@ int main() {
             }
             for(int i = 0; i < 20; i++) {
                 draw_bases(sdlRenderer, bases[i]);
+                check_collision(bases);
                 draw_soldiers(sdlRenderer, &bases[i], bases);
             }
             // code must be completed to play the game
