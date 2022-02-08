@@ -10,9 +10,16 @@
 #include <time.h>
 #include <string.h>
 
+struct Player{
+    char name[50];
+    int point;
+    struct Player* next;
+};
+
 struct Soldier{
     int x;
     int y;
+    float speed;
     SDL_Point src;
     SDL_Point dest;
     SDL_Point dest2;
@@ -469,17 +476,17 @@ void draw_soldiers(SDL_Renderer *sdlRenderer, struct Base* base, struct Base bas
                     teta = atan((base->soldiers[i].dest.y - base->soldiers[i].y) * 1.0 /
                                 (base->soldiers[i].dest.x - base->soldiers[i].x));
                     if (base->soldiers[i].x > base->soldiers[i].dest.x) {
-                        base->soldiers[i].x -= 3.5 * cos(teta);
-                        base->soldiers[i].y -= 3.5 * sin(teta);
+                        base->soldiers[i].x -= base->soldiers[i].speed * cos(teta);
+                        base->soldiers[i].y -= base->soldiers[i].speed * sin(teta);
                     } else {
-                        base->soldiers[i].x += 3.5 * cos(teta);
-                        base->soldiers[i].y += 3.5 * sin(teta);
+                        base->soldiers[i].x += base->soldiers[i].speed * cos(teta);
+                        base->soldiers[i].y += base->soldiers[i].speed * sin(teta);
                     }
                 } else {
                     if (base->soldiers[i].y > base->soldiers[i].dest.y)
-                        base->soldiers[i].y -= 3.5;
+                        base->soldiers[i].y -= base->soldiers[i].speed;
                     else
-                        base->soldiers[i].y += 3.5;
+                        base->soldiers[i].y += base->soldiers[i].speed;
                 }
             } else
                 continue;
@@ -520,6 +527,7 @@ void artificial_intelligence(struct Base bases[20]){
             x = rand() % 20;
             if (bases[i].number_of_soldiers >= 17) {
                 for (int j = 0; j < bases[i].number_of_soldiers; j++) {
+                    bases[i].soldiers[j].speed = 3.5;
                     bases[i].soldiers[j].src.x = bases[i].x;
                     bases[i].soldiers[j].src.y = bases[i].y;
                     bases[i].soldiers[j].dest.x = bases[x].x;
@@ -536,6 +544,7 @@ void artificial_intelligence(struct Base bases[20]){
                 for (int j = 0; j < 20; j++) {
                     if (bases[j].number_of_soldiers <= (bases[i].number_of_soldiers / 2) && bases[j].id != bases[i].id) {
                         for (int k = 0; k < bases[i].number_of_soldiers; k++) {
+                            bases[i].soldiers[k].speed = 3.5;
                             bases[i].soldiers[k].src.x = bases[i].x;
                             bases[i].soldiers[k].src.y = bases[i].y;
                             bases[i].soldiers[k].dest.x = bases[j].x;
@@ -555,6 +564,7 @@ void artificial_intelligence(struct Base bases[20]){
                 for(int j = 0; j < 20; j++){
                     if(bases[j].number_of_soldiers <= (bases[i].number_of_soldiers / 2) && bases[j].id != bases[i].id) {
                         for (int k = 0; k < bases[i].number_of_soldiers; k++) {
+                            bases[i].soldiers[k].speed = 3.5;
                             bases[i].soldiers[k].src.x = bases[i].x;
                             bases[i].soldiers[k].src.y = bases[i].y;
                             bases[i].soldiers[k].dest.x = bases[j].x;
@@ -574,6 +584,7 @@ void artificial_intelligence(struct Base bases[20]){
                 for (int j = 0; j < 20; j++) {
                     if (bases[j].number_of_soldiers <= bases[i].number_of_soldiers && bases[j].id != bases[i].id) {
                         for (int k = 0; k < bases[i].number_of_soldiers; k++) {
+                            bases[i].soldiers[k].speed = 3.5;
                             bases[i].soldiers[k].src.x = bases[i].x;
                             bases[i].soldiers[k].src.y = bases[i].y;
                             bases[i].soldiers[k].dest.x = bases[j].x;
@@ -592,6 +603,7 @@ void artificial_intelligence(struct Base bases[20]){
             for (int j = 0; j < 20; j++) {
                 if (bases[j].number_of_soldiers < bases[i].number_of_soldiers && bases[j].id != bases[i].id) {
                     for (int k = 0; k < bases[i].number_of_soldiers; k++) {
+                        bases[i].soldiers[k].speed = 3.5;
                         bases[i].soldiers[k].src.x = bases[i].x;
                         bases[i].soldiers[k].src.y = bases[i].y;
                         bases[i].soldiers[k].dest.x = bases[j].x;
@@ -631,11 +643,89 @@ void check_collision(struct Base bases[20]){
     }
 }
 
+struct Player* add_player(struct Player* head_players, char username[50], int p){
+    struct Player* link = (struct Player*)(malloc(sizeof(struct Player)));
+    link->point = p;
+    strcpy(link->name, username);
+    link->next = head_players;
+    return link;
+}
+
+struct Player* search_player(char username[50], struct Player* head_players){
+    int flag = 0;
+    struct Player* user;
+    user = head_players;
+    while(user != NULL){
+        if(strcmp(user->name, username) == 0)
+            flag++;
+        if(flag)
+            return user;
+        user = user->next;
+    }
+    return NULL;
+}
+
+struct Player* read_datas(struct Player* head_players){
+    FILE* fp;
+    fp = fopen("players.txt", "r");
+    char line[100];
+    char username[100];
+    int point;
+    while(fscanf(fp, "%[^\n]s", line) != EOF) {
+        sscanf(line, "%s %d", username, &point);
+        head_players = add_player(head_players, username, point);
+        fscanf(fp, "\n");
+    }
+    return head_players;
+}
+
+void add_datas(struct Player current, struct Player* head_players){
+    while(head_players->next != NULL){
+        if(strcmp(head_players->name, current.name) == 0) {
+            head_players->point = current.point;
+            break;
+        }
+        head_players = head_players->next;
+    }
+}
+
+int find_best(char best[50], int bestie, struct Player* head_players){
+    struct Player* user;
+    user = head_players;
+    while(user->next != NULL){
+        if(bestie <= user->point){
+            bestie = user->point;
+            strcpy(best, user->name);
+        }
+        user = user->next;
+    }
+    return bestie;
+}
+
+void save_datas(struct Player* head_players){
+    FILE* fp;
+    fp = fopen("players.txt", "w");
+    struct Player* user;
+    user = head_players;
+    while(user->next != NULL) {
+        fprintf(fp, "%s %d\n", user->name, user->point);
+        user = user->next;
+    }
+}
+
 int main() {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return 0;
     }
+    //players phase=====================================================================================================
+    struct Player* head_players = (struct Player*)(malloc(sizeof(struct Player)));
+    head_players->next = NULL;
+    head_players = read_datas(head_players);
+    struct Player current;
+    char best[50];
+    int bestie = 0;
+    //players end=======================================================================================================
     //loading phase=====================================================================================================
     int load = 12;
     int stage = 0;
@@ -649,7 +739,7 @@ int main() {
     SDL_Texture *sdlTexture2 = getImageTexture(sdlRenderer, "../menu.bmp");
     SDL_Texture *sdlTexture3 = getImageTexture(sdlRenderer, "../game.bmp");
     SDL_Texture *sdlTexture4 = getImageTexture(sdlRenderer, "../victory.bmp");
-    SDL_Texture *sdlTexture5 = getImageTexture(sdlRenderer, "../loose.bmp");
+    SDL_Texture *sdlTexture5 = getImageTexture(sdlRenderer, "../lose.bmp");
     SDL_Rect texture_rect = {.x=0, .y=0, .w=SCREEN_WIDTH, .h=SCREEN_HEIGHT};
     SDL_Rect texture_rect2 = {.x=20, .y=20, .w=510, .h=500};
     char username[100] = "";
@@ -662,7 +752,7 @@ int main() {
     Sint16 y1 = 350, y2 = 380;
     Sint16 x3 = 390;
     Sint16 y3 = 280;
-    int t=0;
+    long long int t=0;
     int flag = 0;
     int first = 0;
     SDL_bool shallExit = SDL_FALSE;
@@ -727,10 +817,16 @@ int main() {
                 case 0:
                     break;
                 case 1:
+                    current.point += 10;
+                    add_datas(current, head_players);
                     sdlTexture = sdlTexture4;
                     stage = 6; //win
                     break;
                 case 2:
+                    current.point -= 5;
+                    if(current.point < 0)
+                        current.point = 0;
+                    add_datas(current, head_players);
                     sdlTexture = sdlTexture5;
                     stage = 7; //loose
                     break;
@@ -756,10 +852,13 @@ int main() {
         //maps page end=================================================================================================
         //Leaderboard page==============================================================================================
         else if(stage == 5){
-            // code must be completed to show the leaderboard
             SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect2);
             stringColor(sdlRenderer, 580, 265, "Best Of Bests:", 0xff8c6121);
             roundedRectangleColor(sdlRenderer, 545, 285, 735, 315, 10, 0xff8c6121);
+            stringColor(sdlRenderer, 570, 295, best, 0xff8c6121);
+            char p[4];
+            itoa(bestie, p, 10);
+            stringColor(sdlRenderer, 690, 295, p, 0xff8c6121);
             roundedRectangleColor(sdlRenderer, 630, 490, 770, 520, 10, 0xff8c6121);
             stringColor(sdlRenderer, 655, 500, "Back to menu", 0xff8c6121);
         }
@@ -784,8 +883,17 @@ int main() {
                     username[strlen(username) - 1] = '\0';
                 else if (sdlEvent.type == SDL_TEXTINPUT)
                     strcat(username, sdlEvent.text.text);
-                else if (sdlEvent.key.keysym.sym == SDLK_RETURN)
+                else if (sdlEvent.key.keysym.sym == SDLK_RETURN){
+                    if(search_player(username, head_players) == NULL){
+                        head_players = add_player(head_players, username, 0);
+                        strcpy(current.name, username);
+                        current.point = 0;
+                    }else{
+                        strcpy(current.name, username);
+                        current.point = search_player(username, head_players)->point;
+                    }
                     stage = 2;
+                }
             }
             else if(sdlEvent.type == SDL_MOUSEBUTTONDOWN){
                 if(stage == 2){
@@ -796,8 +904,11 @@ int main() {
                     }
                     else if(560 <= sdlEvent.button.x && 730 >= sdlEvent.button.x && 305 <= sdlEvent.button.y && 335 >= sdlEvent.button.y)
                         stage = 4;
-                    else if(560 <= sdlEvent.button.x && 730 >= sdlEvent.button.x && 345 <= sdlEvent.button.y && 375 >= sdlEvent.button.y)
+                    else if(560 <= sdlEvent.button.x && 730 >= sdlEvent.button.x && 345 <= sdlEvent.button.y && 375 >= sdlEvent.button.y) {
+                        bestie = 0;
+                        bestie = find_best(best, bestie, head_players);
                         stage = 5;
+                    }
                 }else if(stage == 3){
                     for(int i = 0; i < 20; i++){
                         if(bases[i].x-30 <= sdlEvent.button.x && bases[i].x+30 >= sdlEvent.button.x && bases[i].y-25 <= sdlEvent.button.y && bases[i].y+25 >= sdlEvent.button.y){
@@ -806,6 +917,7 @@ int main() {
                                 first = i;
                             }else if(flag == 1 && i != first){
                                 for(int j = 0; j < bases[first].number_of_soldiers; j++) {
+                                    bases[first].soldiers[j].speed = 3.5;
                                     bases[first].soldiers[j].src.x = bases[first].x;
                                     bases[first].soldiers[j].src.y = bases[first].y;
                                     bases[first].soldiers[j].dest.x = bases[i].x;
@@ -865,6 +977,7 @@ int main() {
         t++;
     }
 
+    save_datas(head_players);
     SDL_StopTextInput();
     SDL_DestroyWindow(sdlWindow);
     printf("Hello World\n");
