@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <time.h>
 #include <string.h>
 
@@ -35,8 +36,18 @@ struct Base{
     Uint32 color2;
     int number_of_soldiers;
     int attacking_soldiers;
-    struct Soldier soldiers[200];
+    int potion;
+    int timer;
+    struct Soldier* soldiers;
+    int max;
     int id;
+};
+
+struct Potion{
+    Sint16 x;
+    Sint16 y;
+    bool is_on;
+    Uint32 color;
 };
 
 const int SCREEN_WIDTH = 780;
@@ -64,6 +75,10 @@ void generate_random_base(struct Base bases[10], Uint32 colors[5], Uint32 colors
     bases[0].id = 0;
     bases[0].number_of_soldiers = 0;
     bases[0].attacking_soldiers = 0;
+    bases[0].potion = 0;
+    bases[0].timer = 0;
+    bases[0].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+    bases[0].max = 60;
     int flag = 0;
     int i = 1;
     int x, y;
@@ -87,8 +102,12 @@ void generate_random_base(struct Base bases[10], Uint32 colors[5], Uint32 colors
             bases[i].color = colors[0];
             bases[i].color2 = colors2[0];
             bases[i].id = 0;
+            bases[i].timer = 0;
+            bases[i].potion = 0;
             bases[i].number_of_soldiers = 0;
             bases[i].attacking_soldiers = 0;
+            bases[i].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+            bases[i].max = 60;
         }else {
             i--;
         }
@@ -114,8 +133,12 @@ void generate_random_base(struct Base bases[10], Uint32 colors[5], Uint32 colors
             bases[i].color = colors[z];
             bases[i].color2 = colors2[z];
             bases[i].id = z;
+            bases[i].potion = 0;
+            bases[i].timer = 0;
             bases[i].number_of_soldiers = 0;
             bases[i].attacking_soldiers = 0;
+            bases[i].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+            bases[i].max = 60;
         }else {
             i--;
             flag = 0;
@@ -141,11 +164,77 @@ void generate_random_base(struct Base bases[10], Uint32 colors[5], Uint32 colors
             bases[i].color = colors[4];
             bases[i].color2 = colors2[4];
             bases[i].id = 4;
+            bases[i].potion = 0;
+            bases[i].timer = 0;
             bases[i].number_of_soldiers = 30;
             bases[i].attacking_soldiers = 0;
+            bases[i].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+            bases[i].max = 60;
         }else {
             i--;
             flag = 0;
+        }
+    }
+}
+
+void generate_potion(struct Base bases[20], Uint32 colors[6], struct Potion potions[6]){
+    srand(time(0));
+    int flag, flag2, z, temp;
+    int i = 0;
+    int k =  2 + (rand() % 4);
+    z = 2 + (rand() % 4);
+    while(k == z)
+        z = 2 + rand() % 4;
+    if(k > z){
+        temp = z;
+        z = k;
+        k = temp;
+    }
+    int x, y, counter = 0;
+    for(i; i < 6; i++) {
+        if(i < 2 || i == k || i == z) {
+            flag = 0;
+            flag2 = 0;
+            x = rand() % 580;
+            y = rand() % 360;
+            if((x <= 200) || (y <= 200)) {
+                i--;
+                continue;
+            }
+            for (int j = 0; (j < counter && j < 3); j++) {
+                if(j > 1)
+                    j = k;
+                if (pow(abs(x - potions[j].x), 2) + pow(abs(y - potions[j].y), 2) > 1000) {
+                    flag++;
+                    continue;
+                } else
+                    break;
+            }
+            if (flag != counter) {
+                i--;
+                continue;
+            }
+            for (int j = 0; j < 20; j++) {
+                if (pow(abs(x - bases[j].x), 2) + pow(abs(y - bases[j].y), 2) > 9000) {
+                    flag2++;
+                    continue;
+                } else
+                    break;
+            }
+            if (flag2 == 20) {
+                potions[i].x = x;
+                potions[i].y = y;
+                potions[i].is_on = true;
+                potions[i].color = colors[i];
+                counter++;
+            } else {
+                i--;
+            }
+        }else{
+            potions[i].x = 0;
+            potions[i].y = 0;
+            potions[i].is_on = false;
+            potions[i].color = colors[i];
         }
     }
 }
@@ -157,8 +246,12 @@ void generate_bases1(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i].color = colors[0];
         bases[i].color2 = colors2[0];
         bases[i].id = 0;
+        bases[i].potion = 0;
+        bases[i].timer = 0;
         bases[i].number_of_soldiers = 0;
         bases[i].attacking_soldiers = 0;
+        bases[i].soldiers = (struct Soldier *) (malloc(60 * sizeof(struct Soldier)));
+        bases[i].max = 60;
     }
     for(int i = 0; i < 4; i++){
         bases[i + 16].x = 390;
@@ -169,8 +262,12 @@ void generate_bases1(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i + 16].color = colors[4];
         bases[i + 16].color2 = colors2[4];
         bases[i + 16].id = 4;
+        bases[i + 16].potion = 0;
+        bases[i + 16].timer = 0;
         bases[i + 16].number_of_soldiers = 30;
         bases[i + 16].attacking_soldiers = 0;
+        bases[i + 16].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i + 16].max = 60;
     }
     for(int i = 0; i < 8; i++){
         bases[i + 8].x = 580;
@@ -178,8 +275,12 @@ void generate_bases1(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i + 8].color = colors[3];
         bases[i + 8].color2 = colors2[3];
         bases[i + 8].id = 3;
+        bases[i + 8].potion = 0;
+        bases[i + 8].timer = 0;
         bases[i + 8].number_of_soldiers = 0;
         bases[i + 8].attacking_soldiers = 0;
+        bases[i + 8].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i + 8].max = 60;
     }
 }
 
@@ -198,8 +299,12 @@ void generate_bases2(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i].color = colors[0];
         bases[i].color2 = colors2[0];
         bases[i].id = 0;
+        bases[i].potion = 0;
+        bases[i].timer = 0;
         bases[i].number_of_soldiers = 0;
         bases[i].attacking_soldiers = 0;
+        bases[i].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i].max = 60;
     }
     for(int i = 0; i < 5; i++){
         if(i < 2) {
@@ -215,8 +320,12 @@ void generate_bases2(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i + 5].color = colors[1];
         bases[i + 5].color2 = colors2[1];
         bases[i + 5].id = 1;
+        bases[i + 5].potion = 0;
+        bases[i + 5].timer = 0;
         bases[i + 5].number_of_soldiers = 0;
         bases[i + 5].attacking_soldiers = 0;
+        bases[i + 5].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i + 5].max = 60;
     }
     for(int i = 0; i < 5; i++){
         if(i < 2) {
@@ -232,8 +341,12 @@ void generate_bases2(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i + 10].color = colors[2];
         bases[i + 10].color2 = colors2[2];
         bases[i + 10].id = 2;
+        bases[i + 10].potion = 0;
+        bases[i + 10].timer = 0;
         bases[i + 10].number_of_soldiers = 0;
         bases[i + 10].attacking_soldiers = 0;
+        bases[i + 10].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i + 10].max = 60;
     }
     for(int i = 0; i < 5; i++){
         if(i < 3) {
@@ -246,8 +359,12 @@ void generate_bases2(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i + 15].color = colors[4];
         bases[i + 15].color2 = colors2[4];
         bases[i + 15].id = 4;
+        bases[i + 15].potion = 0;
+        bases[i + 15].timer = 0;
         bases[i + 15].number_of_soldiers = 30;
         bases[i + 15].attacking_soldiers = 0;
+        bases[i + 15].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i + 15].max = 60;
     }
 }
 
@@ -266,8 +383,12 @@ void generate_bases3(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i].color = colors[0];
         bases[i].color2 = colors2[0];
         bases[i].id = 0;
+        bases[i].potion = 0;
+        bases[i].timer = 0;
         bases[i].number_of_soldiers = 0;
         bases[i].attacking_soldiers = 0;
+        bases[i].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i].max = 60;
     }
     for(int i = 0; i < 4; i++){
         if(i < 1) {
@@ -283,8 +404,12 @@ void generate_bases3(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i + 4].color = colors[1];
         bases[i + 4].color2 = colors2[1];
         bases[i + 4].id = 1;
+        bases[i + 4].potion = 0;
+        bases[i + 4].timer = 0;
         bases[i + 4].number_of_soldiers = 0;
         bases[i + 4].attacking_soldiers = 0;
+        bases[i + 4].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i + 4].max = 60;
     }
     for(int i = 0; i < 4; i++){
         if(i < 1) {
@@ -300,8 +425,12 @@ void generate_bases3(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i + 8].color = colors[2];
         bases[i + 8].color2 = colors2[2];
         bases[i + 8].id = 2;
+        bases[i + 8].potion = 0;
+        bases[i + 8].timer = 0;
         bases[i + 8].number_of_soldiers = 0;
         bases[i + 8].attacking_soldiers = 0;
+        bases[i + 8].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i + 8].max = 60;
     }
     for(int i = 0; i < 4; i++){
         if(i < 1) {
@@ -317,8 +446,12 @@ void generate_bases3(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i + 12].color = colors[3];
         bases[i + 12].color2 = colors2[3];
         bases[i + 12].id = 3;
+        bases[i + 12].potion = 0;
+        bases[i + 12].timer = 0;
         bases[i + 12].number_of_soldiers = 0;
         bases[i + 12].attacking_soldiers = 0;
+        bases[i + 12].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i + 12].max = 60;
     }
     for(int i = 0; i < 4; i++){
         if(i < 1) {
@@ -334,8 +467,12 @@ void generate_bases3(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i + 16].color = colors[4];
         bases[i + 16].color2 = colors2[4];
         bases[i + 16].id = 4;
+        bases[i + 16].potion = 0;
+        bases[i + 16].timer = 0;
         bases[i + 16].number_of_soldiers = 30;
         bases[i + 16].attacking_soldiers = 0;
+        bases[i + 16].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i + 16].max = 60;
     }
 }
 
@@ -351,8 +488,12 @@ void generate_bases4(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i].color = colors[0];
         bases[i].color2 = colors2[0];
         bases[i].id = 0;
+        bases[i].potion = 0;
+        bases[i].timer = 0;
         bases[i].number_of_soldiers = 0;
         bases[i].attacking_soldiers = 0;
+        bases[i].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i].max = 60;
     }
     for(int i = 0; i < 4; i++){
         if(i < 2) {
@@ -365,8 +506,12 @@ void generate_bases4(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i + 4].color = colors[1];
         bases[i + 4].color2 = colors2[1];
         bases[i + 4].id = 1;
+        bases[i + 4].potion = 0;
+        bases[i + 4].timer = 0;
         bases[i + 4].number_of_soldiers = 0;
         bases[i + 4].attacking_soldiers = 0;
+        bases[i + 4].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i + 4].max = 60;
     }
     for(int i = 0; i < 4; i++){
         if(i < 1) {
@@ -382,8 +527,12 @@ void generate_bases4(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i + 8].color = colors[2];
         bases[i + 8].color2 = colors2[2];
         bases[i + 8].id = 2;
+        bases[i + 8].potion = 0;
+        bases[i + 8].timer = 0;
         bases[i + 8].number_of_soldiers = 0;
         bases[i + 8].attacking_soldiers = 0;
+        bases[i + 8].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i + 8].max = 60;
     }
     for(int i = 0; i < 4; i++){
         if(i < 1) {
@@ -399,8 +548,12 @@ void generate_bases4(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i + 12].color = colors[3];
         bases[i + 12].color2 = colors2[3];
         bases[i + 12].id = 3;
+        bases[i + 12].potion = 0;
+        bases[i + 12].timer = 0;
         bases[i + 12].number_of_soldiers = 0;
         bases[i + 12].attacking_soldiers = 0;
+        bases[i + 12].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i + 12].max = 60;
     }
     for(int i = 0; i < 4; i++){
         if(i < 2) {
@@ -413,9 +566,19 @@ void generate_bases4(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5])
         bases[i + 16].color = colors[4];
         bases[i + 16].color2 = colors2[4];
         bases[i + 16].id = 4;
+        bases[i + 16].potion = 0;
+        bases[i + 16].timer = 0;
         bases[i + 16].number_of_soldiers = 30;
         bases[i + 16].attacking_soldiers = 0;
+        bases[i + 16].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
+        bases[i + 16].max = 60;
     }
+}
+
+void draw_potions(SDL_Renderer* sdlRenderer, struct Potion potion){
+    Sint16 vx[6] = {potion.x - 3, potion.x - 3, potion.x + 3, potion.x + 3, potion.x + 9, potion.x - 9};
+    Sint16 vy[6] = {potion.y, potion.y - 18, potion.y - 18, potion.y, potion.y + 9, potion.y + 9};
+    filledPolygonColor(sdlRenderer, vx, vy, 6, potion.color);
 }
 
 void draw_bases(SDL_Renderer *sdlRenderer, struct Base base) {
@@ -425,6 +588,11 @@ void draw_bases(SDL_Renderer *sdlRenderer, struct Base base) {
     Sint16 vy2[4] = {base.y, base.y - 10, base.y, base.y+10};
     filledPolygonColor(sdlRenderer, vx, vy, 6, base.color);
     filledPolygonColor(sdlRenderer, vx2, vy2, 4, base.color2);
+    if(base.potion == 1 || base.potion == 2 || base.potion == 6 || base.potion == 7){
+        Sint16 vx3[8] = {base.x-7, base.x,base.x+7, base.x+2, base.x+7, base.x, base.x-7, base.x-2};
+        Sint16 vy3[8] = {base.y - 37, base.y - 32, base.y -37, base.y-30, base.y-23, base.y-28, base.y-23, base.y - 30};
+        filledPolygonColor(sdlRenderer, vx3, vy3, 8, base.color2);
+    }
     char soldiers[3];
     itoa(base.number_of_soldiers, soldiers, 10);
     stringColor(sdlRenderer, base.x -3, base.y + 13, soldiers, 0xffaa0000);
@@ -436,28 +604,36 @@ void produce_soldier(struct Base* base){
 
 void attack(struct Base* base){
     double teta;
-    if(base->soldiers[0].dest.x - base->soldiers[0].src.x != 0)
-        teta = atan(base->soldiers[0].dest.y - base->soldiers[0].src.y) * 1.0 / (base->soldiers[0].dest.x - base->soldiers[0].src.x);
+    if((*((base->soldiers)+0)).dest.x - (*((base->soldiers)+0)).src.x != 0)
+        teta = atan((*((base->soldiers)+0)).dest.y - (*((base->soldiers)+0)).src.y) * 1.0 / ((*((base->soldiers)+0)).dest.x - (*((base->soldiers)+0)).src.x);
     for(int i = 0; i < base->number_of_soldiers; i++) {
-        base->soldiers[i].is_attacking = true;
-        base->soldiers[i].delay = (i/5 * 8);
-        base->soldiers[i].x = base->x + ((8 * sin(teta)) * (1 - (i % 5)));
-        base->soldiers[i].y = base->y + ((8 * cos(teta)) * (1 - (i % 5)));
-        base->soldiers[i].dest.x += ((8 * sin(teta)) * (1 - (i % 5)));
-        base->soldiers[i].dest.y += ((8 * cos(teta)) * (1 - (i % 5)));
+        (*((base->soldiers)+i)).is_attacking = true;
+        (*((base->soldiers)+i)).delay = (i / 5 * 8);
+        (*((base->soldiers)+i)).x = base->x + ((8 * sin(teta)) * (1 - (i % 5)));
+        (*((base->soldiers)+i)).y = base->y + ((8 * cos(teta)) * (1 - (i % 5)));
+        (*((base->soldiers)+i)).dest.x += ((8 * sin(teta)) * (1 - (i % 5)));
+        (*((base->soldiers)+i)).dest.y += ((8 * cos(teta)) * (1 - (i % 5)));
     }
 }
 
 void fight(struct Base bases[20], struct Base* base, int n){
     for(int i = 0; i < 20; i++){
-        if(base->soldiers[n].dest2.x == bases[i].x && base->soldiers[n].dest2.y == bases[i].y) {
+        if((*((base->soldiers)+n)).dest2.x == bases[i].x && (*((base->soldiers)+n)).dest2.y == bases[i].y) {
             if (base->id == bases[i].id) {
                 bases[i].number_of_soldiers++;
             } else {
                 bases[i].number_of_soldiers--;
+                if(bases[i].potion == 6)
+                    bases[i].number_of_soldiers++;
+                if(bases[i].potion == 7) {
+                    bases[i].number_of_soldiers++;
+                    bases[i].number_of_soldiers++;
+                }
                 if (bases[i].number_of_soldiers < 0) {
                     bases[i].number_of_soldiers++;
                     bases[i].id = base->id;
+                    bases[i].potion = base->potion;
+                    bases[i].timer = base->timer;
                     bases[i].color = base->color;
                     bases[i].color2 = base->color2;
                 }
@@ -469,33 +645,36 @@ void fight(struct Base bases[20], struct Base* base, int n){
 void draw_soldiers(SDL_Renderer *sdlRenderer, struct Base* base, struct Base bases[20]){
     double teta;
     for(int i = 0; i < base->attacking_soldiers; i++){
-        if(base->soldiers[i].is_attacking) {
-            base->soldiers[i].delay--;
-            if (base->soldiers[i].delay <= -1) {
-                if (base->soldiers[i].dest.x - base->soldiers[i].x != 0) {
-                    teta = atan((base->soldiers[i].dest.y - base->soldiers[i].y) * 1.0 /
-                                (base->soldiers[i].dest.x - base->soldiers[i].x));
-                    if (base->soldiers[i].x > base->soldiers[i].dest.x) {
-                        base->soldiers[i].x -= base->soldiers[i].speed * cos(teta);
-                        base->soldiers[i].y -= base->soldiers[i].speed * sin(teta);
+        if((*((base->soldiers)+i)).is_attacking) {
+            (*((base->soldiers)+i)).delay--;
+            if ((*((base->soldiers)+i)).delay <= -1) {
+                if ((*((base->soldiers)+i)).dest.x - (*((base->soldiers)+i)).x != 0) {
+                    teta = atan(((*((base->soldiers)+i)).dest.y - (*((base->soldiers)+i)).y) * 1.0 /
+                                ((*((base->soldiers)+i)).dest.x - (*((base->soldiers)+i)).x));
+                    if ((*((base->soldiers)+i)).x > (*((base->soldiers)+i)).dest.x) {
+                        (*((base->soldiers)+i)).x -= (*((base->soldiers)+i)).speed * cos(teta);
+                        (*((base->soldiers)+i)).y -= (*((base->soldiers)+i)).speed * sin(teta);
                     } else {
-                        base->soldiers[i].x += base->soldiers[i].speed * cos(teta);
-                        base->soldiers[i].y += base->soldiers[i].speed * sin(teta);
+                        (*((base->soldiers)+i)).x += (*((base->soldiers)+i)).speed * cos(teta);
+                        (*((base->soldiers)+i)).y += (*((base->soldiers)+i)).speed * sin(teta);
                     }
                 } else {
-                    if (base->soldiers[i].y > base->soldiers[i].dest.y)
-                        base->soldiers[i].y -= base->soldiers[i].speed;
+                    if ((*((base->soldiers)+i)).y > (*((base->soldiers)+i)).dest.y)
+                        (*((base->soldiers)+i)).y -= (*((base->soldiers)+i)).speed;
                     else
-                        base->soldiers[i].y += base->soldiers[i].speed;
+                        (*((base->soldiers)+i)).y += (*((base->soldiers)+i)).speed;
                 }
             } else
                 continue;
-            filledCircleColor(sdlRenderer, base->soldiers[i].x, base->soldiers[i].y, 3, base->color);
-            if (pow(base->soldiers[i].x - base->soldiers[i].dest.x, 2) + pow(base->soldiers[i].y - base->soldiers[i].dest.y, 2) <= 625) {
-                base->soldiers[i].x = base->soldiers[i].dest2.x;
-                base->soldiers[i].y = base->soldiers[i].dest2.y;
+            if(base->potion <= 2 || base->potion >= 5)
+                filledCircleColor(sdlRenderer, (*((base->soldiers)+i)).x, (*((base->soldiers)+i)).y, 3, base->color);
+            else if(base->potion >= 3 && base->potion < 5)
+                filledCircleColor(sdlRenderer, (*((base->soldiers)+i)).x, (*((base->soldiers)+i)).y, 3, base->color2);
+            if (pow((*((base->soldiers)+i)).x - (*((base->soldiers)+i)).dest.x, 2) + pow((*((base->soldiers)+i)).y - (*((base->soldiers)+i)).dest.y, 2) <= 625) {
+                (*((base->soldiers)+i)).x = (*((base->soldiers)+i)).dest2.x;
+                (*((base->soldiers)+i)).y = (*((base->soldiers)+i)).dest2.y;
                 fight(bases, base, i);
-                base->soldiers[i].is_attacking = false;
+                (*((base->soldiers)+i)).is_attacking = false;
             }
         }else
             continue;
@@ -526,14 +705,24 @@ void artificial_intelligence(struct Base bases[20]){
         if(i % 4 == 0 && bases[i].id != 0 && bases[i].id != 4) {
             x = rand() % 20;
             if (bases[i].number_of_soldiers >= 17) {
+                if(bases[i].max / 2 < bases[i].number_of_soldiers || bases[i].max > bases[i].number_of_soldiers * 3) {
+                    bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers,
+                                                                   bases[i].number_of_soldiers *
+                                                                   2 * sizeof(struct Soldier));
+                    bases[i].max = 2 * bases[i].number_of_soldiers;
+                }
                 for (int j = 0; j < bases[i].number_of_soldiers; j++) {
-                    bases[i].soldiers[j].speed = 3.5;
-                    bases[i].soldiers[j].src.x = bases[i].x;
-                    bases[i].soldiers[j].src.y = bases[i].y;
-                    bases[i].soldiers[j].dest.x = bases[x].x;
-                    bases[i].soldiers[j].dest.y = bases[x].y;
-                    bases[i].soldiers[j].dest2.x = bases[x].x;
-                    bases[i].soldiers[j].dest2.y = bases[x].y;
+                    (*((bases[i].soldiers)+j)).speed = 3.5;
+                    if(bases[i].potion == 3)
+                        (*((bases[i].soldiers)+j)).speed = 7;
+                    if(bases[i].potion == 4)
+                        (*((bases[i].soldiers)+j)).speed = 2;
+                    (*((bases[i].soldiers)+j)).src.x = bases[i].x;
+                    (*((bases[i].soldiers)+j)).src.y = bases[i].y;
+                    (*((bases[i].soldiers)+j)).dest.x = bases[x].x;
+                    (*((bases[i].soldiers)+j)).dest.y = bases[x].y;
+                    (*((bases[i].soldiers)+j)).dest2.x = bases[x].x;
+                    (*((bases[i].soldiers)+j)).dest2.y = bases[x].y;
                 }
                 attack(&bases[i]);
                 bases[i].attacking_soldiers = bases[i].number_of_soldiers;
@@ -541,16 +730,26 @@ void artificial_intelligence(struct Base bases[20]){
             }
         }else if(i % 4 == 1 && bases[i].id != 0 && bases[i].id != 4) {
             if (bases[i].number_of_soldiers >= 22) {
+                if(bases[i].max / 2 < bases[i].number_of_soldiers || bases[i].max > bases[i].number_of_soldiers * 3) {
+                    bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers,
+                                                                   bases[i].number_of_soldiers *
+                                                                   2 * sizeof(struct Soldier));
+                    bases[i].max = 2 * bases[i].number_of_soldiers;
+                }
                 for (int j = 0; j < 20; j++) {
                     if (bases[j].number_of_soldiers <= (bases[i].number_of_soldiers / 2) && bases[j].id != bases[i].id) {
                         for (int k = 0; k < bases[i].number_of_soldiers; k++) {
-                            bases[i].soldiers[k].speed = 3.5;
-                            bases[i].soldiers[k].src.x = bases[i].x;
-                            bases[i].soldiers[k].src.y = bases[i].y;
-                            bases[i].soldiers[k].dest.x = bases[j].x;
-                            bases[i].soldiers[k].dest.y = bases[j].y;
-                            bases[i].soldiers[k].dest2.x = bases[j].x;
-                            bases[i].soldiers[k].dest2.y = bases[j].y;
+                            (*((bases[i].soldiers)+k)).speed = 3.5;
+                            if(bases[i].potion == 3)
+                                (*((bases[i].soldiers)+k)).speed = 7;
+                            if(bases[i].potion == 4)
+                                (*((bases[i].soldiers)+k)).speed = 2;
+                            (*((bases[i].soldiers)+k)).src.x = bases[i].x;
+                            (*((bases[i].soldiers)+k)).src.y = bases[i].y;
+                            (*((bases[i].soldiers)+k)).dest.x = bases[j].x;
+                            (*((bases[i].soldiers)+k)).dest.y = bases[j].y;
+                            (*((bases[i].soldiers)+k)).dest2.x = bases[j].x;
+                            (*((bases[i].soldiers)+k)).dest2.y = bases[j].y;
                         }
                         attack(&bases[i]);
                         bases[i].attacking_soldiers = bases[i].number_of_soldiers;
@@ -561,16 +760,26 @@ void artificial_intelligence(struct Base bases[20]){
             }
         }else if(i % 4 == 2 && bases[i].id != 0 && bases[i].id != 4){
             if(bases[i].number_of_soldiers >= 28){
+                if(bases[i].max / 2 < bases[i].number_of_soldiers || bases[i].max > bases[i].number_of_soldiers * 3) {
+                    bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers,
+                                                                   bases[i].number_of_soldiers *
+                                                                   2 * sizeof(struct Soldier));
+                    bases[i].max = 2 * bases[i].number_of_soldiers;
+                }
                 for(int j = 0; j < 20; j++){
                     if(bases[j].number_of_soldiers <= (bases[i].number_of_soldiers / 2) && bases[j].id != bases[i].id) {
                         for (int k = 0; k < bases[i].number_of_soldiers; k++) {
-                            bases[i].soldiers[k].speed = 3.5;
-                            bases[i].soldiers[k].src.x = bases[i].x;
-                            bases[i].soldiers[k].src.y = bases[i].y;
-                            bases[i].soldiers[k].dest.x = bases[j].x;
-                            bases[i].soldiers[k].dest.y = bases[j].y;
-                            bases[i].soldiers[k].dest2.x = bases[j].x;
-                            bases[i].soldiers[k].dest2.y = bases[j].y;
+                            (*((bases[i].soldiers)+k)).speed = 3.5;
+                            if(bases[i].potion == 3)
+                                (*((bases[i].soldiers)+k)).speed = 7;
+                            if(bases[i].potion == 4)
+                                (*((bases[i].soldiers)+k)).speed = 2;
+                            (*((bases[i].soldiers)+k)).src.x = bases[i].x;
+                            (*((bases[i].soldiers)+k)).src.y = bases[i].y;
+                            (*((bases[i].soldiers)+k)).dest.x = bases[j].x;
+                            (*((bases[i].soldiers)+k)).dest.y = bases[j].y;
+                            (*((bases[i].soldiers)+k)).dest2.x = bases[j].x;
+                            (*((bases[i].soldiers)+k)).dest2.y = bases[j].y;
                         }
                         attack(&bases[i]);
                         bases[i].attacking_soldiers = bases[i].number_of_soldiers;
@@ -581,16 +790,26 @@ void artificial_intelligence(struct Base bases[20]){
             }
         }else if(i % 4 == 3 && bases[i].id != 0 && bases[i].id != 4){
             if(bases[i].number_of_soldiers >= 9) {
+                if(bases[i].max / 2 < bases[i].number_of_soldiers || bases[i].max > bases[i].number_of_soldiers * 3) {
+                    bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers,
+                                                                   bases[i].number_of_soldiers *
+                                                                   2 * sizeof(struct Soldier));
+                    bases[i].max = 2 * bases[i].number_of_soldiers;
+                }
                 for (int j = 0; j < 20; j++) {
                     if (bases[j].number_of_soldiers <= bases[i].number_of_soldiers && bases[j].id != bases[i].id) {
                         for (int k = 0; k < bases[i].number_of_soldiers; k++) {
-                            bases[i].soldiers[k].speed = 3.5;
-                            bases[i].soldiers[k].src.x = bases[i].x;
-                            bases[i].soldiers[k].src.y = bases[i].y;
-                            bases[i].soldiers[k].dest.x = bases[j].x;
-                            bases[i].soldiers[k].dest.y = bases[j].y;
-                            bases[i].soldiers[k].dest2.x = bases[j].x;
-                            bases[i].soldiers[k].dest2.y = bases[j].y;
+                            (*((bases[i].soldiers)+k)).speed = 3.5;
+                            if(bases[i].potion == 3)
+                                (*((bases[i].soldiers)+k)).speed = 7;
+                            if(bases[i].potion == 4)
+                                (*((bases[i].soldiers)+k)).speed = 2;
+                            (*((bases[i].soldiers)+k)).src.x = bases[i].x;
+                            (*((bases[i].soldiers)+k)).src.y = bases[i].y;
+                            (*((bases[i].soldiers)+k)).dest.x = bases[j].x;
+                            (*((bases[i].soldiers)+k)).dest.y = bases[j].y;
+                            (*((bases[i].soldiers)+k)).dest2.x = bases[j].x;
+                            (*((bases[i].soldiers)+k)).dest2.y = bases[j].y;
                         }
                         attack(&bases[i]);
                         bases[i].attacking_soldiers = bases[i].number_of_soldiers;
@@ -600,16 +819,26 @@ void artificial_intelligence(struct Base bases[20]){
                 }
             }
         }else if(bases[i].id != 0 && bases[i].id != 4 && bases[i].number_of_soldiers >= 30){
+            if(bases[i].max / 2 < bases[i].number_of_soldiers || bases[i].max > bases[i].number_of_soldiers * 3) {
+                bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers,
+                                                               bases[i].number_of_soldiers *
+                                                               2 * sizeof(struct Soldier));
+                bases[i].max = 2 * bases[i].number_of_soldiers;
+            }
             for (int j = 0; j < 20; j++) {
                 if (bases[j].number_of_soldiers < bases[i].number_of_soldiers && bases[j].id != bases[i].id) {
                     for (int k = 0; k < bases[i].number_of_soldiers; k++) {
-                        bases[i].soldiers[k].speed = 3.5;
-                        bases[i].soldiers[k].src.x = bases[i].x;
-                        bases[i].soldiers[k].src.y = bases[i].y;
-                        bases[i].soldiers[k].dest.x = bases[j].x;
-                        bases[i].soldiers[k].dest.y = bases[j].y;
-                        bases[i].soldiers[k].dest2.x = bases[j].x;
-                        bases[i].soldiers[k].dest2.y = bases[j].y;
+                        (*((bases[i].soldiers)+k)).speed = 3.5;
+                        if(bases[i].potion == 3)
+                            (*((bases[i].soldiers)+k)).speed = 7;
+                        if(bases[i].potion == 4)
+                            (*((bases[i].soldiers)+k)).speed = 2;
+                        (*((bases[i].soldiers)+k)).src.x = bases[i].x;
+                        (*((bases[i].soldiers)+k)).src.y = bases[i].y;
+                        (*((bases[i].soldiers)+k)).dest.x = bases[j].x;
+                        (*((bases[i].soldiers)+k)).dest.y = bases[j].y;
+                        (*((bases[i].soldiers)+k)).dest2.x = bases[j].x;
+                        (*((bases[i].soldiers)+k)).dest2.y = bases[j].y;
                     }
                     attack(&bases[i]);
                     bases[i].attacking_soldiers = bases[i].number_of_soldiers;
@@ -627,13 +856,101 @@ void check_collision(struct Base bases[20]){
             if(bases[i].id == bases[j].id)
                 continue;
             for(int k = 0; k < bases[i].attacking_soldiers; k++){
-                if(bases[i].soldiers[k].is_attacking) {
+                if((*((bases[i].soldiers)+k)).is_attacking) {
                     for (int z = 0; z < bases[j].attacking_soldiers; z++) {
-                        if(bases[j].soldiers[z].is_attacking) {
-                            if (pow(bases[i].soldiers[k].y - bases[j].soldiers[z].y, 2) +
-                                pow(bases[i].soldiers[k].x - bases[j].soldiers[z].x, 2) <= 6) {
-                                bases[i].soldiers[k].is_attacking = false;
-                                bases[j].soldiers[z].is_attacking = false;
+                        if((*((bases[j].soldiers)+z)).is_attacking) {
+                            if (pow((*((bases[i].soldiers)+k)).y - (*((bases[j].soldiers)+z)).y, 2) +
+                                pow((*((bases[i].soldiers)+k)).x - (*((bases[j].soldiers)+z)).x, 2) <= 6) {
+                                (*((bases[i].soldiers)+k)).is_attacking = false;
+                                (*((bases[j].soldiers)+z)).is_attacking = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void speed_up(struct Base* base){
+    for(int i = 0; i < base->attacking_soldiers; i++){
+        (*((base->soldiers)+i)).speed = 7;
+    }
+}
+
+void speed_down(struct Base* base){
+    for(int i = 0; i < base->attacking_soldiers; i++){
+        (*((base->soldiers)+i)).speed = 2;
+    }
+}
+
+void get_potion(struct Base bases[20], struct Potion potions[4]){
+    for(int i = 0; i < 20; i++){
+        if(bases[i].potion == 0) {
+            for (int j = 0; j < 6; j++) {
+                if (potions[j].is_on) {
+                    for (int k = 0; k < bases[i].attacking_soldiers; k++) {
+                        if ((*((bases[i].soldiers)+k)).is_attacking) {
+                            if (pow((*((bases[i].soldiers)+k)).y - potions[j].y, 2) +
+                                pow((*((bases[i].soldiers)+k)).x - potions[j].x, 2) <= 100) {
+                                potions[j].is_on = false;
+                                switch (j) {
+                                    case 0:
+                                        for (int z = 0; z < 20; z++) {
+                                            if (bases[z].id == bases[i].id) {
+                                                bases[z].potion = 1;
+                                                bases[z].timer = 500;
+                                            }
+                                        }
+                                        break;
+                                    case 1:
+                                        for (int z = 0; z < 20; z++) {
+                                            if (bases[z].id == bases[i].id) {
+                                                bases[z].potion = 2;
+                                                bases[z].timer = 500;
+                                            }
+                                        }
+                                        break;
+                                    case 2:
+                                        for (int z = 0; z < 20; z++) {
+                                            if (bases[z].id == bases[i].id) {
+                                                bases[z].potion = 3;
+                                                bases[z].timer = 500;
+                                                speed_up(&bases[z]);
+                                            }
+                                        }
+                                        break;
+                                    case 3:
+                                        for (int z = 0; z < 20; z++) {
+                                            if (bases[z].id != bases[i].id && bases[z].potion == 0) {
+                                                bases[z].potion = 4;
+                                                bases[z].timer = 500;
+                                                speed_down(&bases[z]);
+                                            }else{
+                                                bases[z].potion = 5;
+                                                bases[z].timer = 500;
+                                            }
+                                        }
+                                        break;
+                                    case 4:
+                                        for (int z = 0; z < 20; z++) {
+                                            if (bases[z].id == bases[i].id) {
+                                                bases[z].potion = 6;
+                                                bases[z].timer = 500;
+                                            }
+                                        }
+                                        break;
+                                    case 5:
+                                        for (int z = 0; z < 20; z++) {
+                                            if (bases[z].id == bases[i].id) {
+                                                bases[z].potion = 7;
+                                                bases[z].timer = 500;
+                                            }
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
                         }
                     }
@@ -714,6 +1031,8 @@ void save_datas(struct Player* head_players){
 }
 
 int main() {
+    srand(time(0));
+    long long int z;
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return 0;
@@ -746,14 +1065,17 @@ int main() {
     SDL_StartTextInput();
 
     struct Base bases[20];
+    struct Potion potions[6];
     Uint32 colors[5] = {0xff0000ff, 0xff00ffff, 0xff00ff00, 0xffffff00, 0xff6e6d6f};
     Uint32 colors2[5] = {0xff000080, 0xff008080, 0xff008000, 0xff808000, 0xff6e6d6f};
+    Uint32 colors3[6] = {0xff004aba, 0xff83346c, 0xfffefefd, 0xffe800e4, 0xffffbd00, 0xff03981e};
     Sint16 x1 = 100, x2 = 110;
     Sint16 y1 = 350, y2 = 380;
     Sint16 x3 = 390;
     Sint16 y3 = 280;
     long long int t=0;
     int flag = 0;
+    int flag2 = 0;
     int first = 0;
     SDL_bool shallExit = SDL_FALSE;
     while (shallExit == SDL_FALSE) {
@@ -799,19 +1121,36 @@ int main() {
             stringColor(sdlRenderer, 603, 355, "Leaderboard", 0xff8c6121);
         }
         //menu page end=================================================================================================
+        //game page=====================================================================================================
         else if(stage == 3){
             SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect);
             artificial_intelligence(bases);
             if(t % 50 == 0) {
                 for (int i = 0; i < 20; i++) {
-                    if (bases[i].number_of_soldiers < 30 && bases[i].id != 4)
+                    if ((bases[i].number_of_soldiers < 30 || bases[i].potion == 2) && bases[i].id != 4){
                         produce_soldier(&bases[i]);
+                        if(bases[i].potion == 1 && bases[i].number_of_soldiers < 30)
+                            produce_soldier(&bases[i]);
+                    }
                 }
             }
+            if(t % z == 0 && flag2 == 0){
+                generate_potion(bases, colors3, potions);
+                flag2++;
+            }
             for(int i = 0; i < 20; i++) {
+                if(i < 6 && potions[i].is_on) {
+                    draw_potions(sdlRenderer, potions[i]);
+                }
                 draw_bases(sdlRenderer, bases[i]);
+                get_potion(bases, potions);
                 check_collision(bases);
                 draw_soldiers(sdlRenderer, &bases[i], bases);
+                if(bases[i].timer > 0){
+                    bases[i].timer--;
+                }if(bases[i].timer == 0){
+                    bases[i].potion = 0;
+                }
             }
             switch (check_win(bases)) {
                 case 0:
@@ -819,6 +1158,9 @@ int main() {
                 case 1:
                     current.point += 10;
                     add_datas(current, head_players);
+                    for(int i = 0; i < 20; i++){
+                        free(bases[i].soldiers);
+                    }
                     sdlTexture = sdlTexture4;
                     stage = 6; //win
                     break;
@@ -827,14 +1169,17 @@ int main() {
                     if(current.point < 0)
                         current.point = 0;
                     add_datas(current, head_players);
+                    for(int i = 0; i < 20; i++){
+                        free(bases[i].soldiers);
+                    }
                     sdlTexture = sdlTexture5;
                     stage = 7; //loose
                     break;
                 default:
                     break;
             }
-            // code must be completed to play the game
         }
+        //game page end=================================================================================================
         //maps page=====================================================================================================
         else if(stage == 4){
             SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect2);
@@ -863,16 +1208,21 @@ int main() {
             stringColor(sdlRenderer, 655, 500, "Back to menu", 0xff8c6121);
         }
         //Leaderboard page end==========================================================================================
+        //victory page==================================================================================================
         else if(stage == 6){
             SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect);
             roundedRectangleColor(sdlRenderer, 630, 520, 770, 550, 10, 0xff8c6121);
             stringColor(sdlRenderer, 655, 530, "Back to menu", 0xff8c6121);
         }
+        //victory page end==============================================================================================
+        //lose page=====================================================================================================
         else if(stage == 7){
             SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, &texture_rect);
             roundedRectangleColor(sdlRenderer, 630, 520, 770, 550, 10, 0xff8c6121);
             stringColor(sdlRenderer, 655, 530, "Back to menu", 0xff8c6121);
         }
+        //lose page end=================================================================================================
+        //event handling================================================================================================
         SDL_Event sdlEvent;
         while (SDL_PollEvent(&sdlEvent)) {
             if(sdlEvent.type == SDL_QUIT)
@@ -916,14 +1266,24 @@ int main() {
                                 flag++;
                                 first = i;
                             }else if(flag == 1 && i != first){
+                                if(bases[first].max / 2 < bases[first].number_of_soldiers || bases[first].max > bases[first].number_of_soldiers * 3) {
+                                    bases[first].soldiers = (struct Soldier *) realloc(bases[first].soldiers,
+                                                                                       bases[first].number_of_soldiers *
+                                                                                       2 * sizeof(struct Soldier));
+                                    bases[first].max = 2 * bases[first].number_of_soldiers;
+                                }
                                 for(int j = 0; j < bases[first].number_of_soldiers; j++) {
-                                    bases[first].soldiers[j].speed = 3.5;
-                                    bases[first].soldiers[j].src.x = bases[first].x;
-                                    bases[first].soldiers[j].src.y = bases[first].y;
-                                    bases[first].soldiers[j].dest.x = bases[i].x;
-                                    bases[first].soldiers[j].dest.y = bases[i].y;
-                                    bases[first].soldiers[j].dest2.x = bases[i].x;
-                                    bases[first].soldiers[j].dest2.y = bases[i].y;
+                                    (*((bases[first].soldiers)+j)).speed = 3.5;
+                                    if (bases[first].potion == 3)
+                                        (*((bases[first].soldiers)+j)).speed = 7;
+                                    if (bases[first].potion == 4)
+                                        (*((bases[first].soldiers)+j)).speed = 2;
+                                    (*((bases[first].soldiers)+j)).src.x = bases[first].x;
+                                    (*((bases[first].soldiers)+j)).src.y = bases[first].y;
+                                    (*((bases[first].soldiers)+j)).dest.x = bases[i].x;
+                                    (*((bases[first].soldiers)+j)).dest.y = bases[i].y;
+                                    (*((bases[first].soldiers)+j)).dest2.x = bases[i].x;
+                                    (*((bases[first].soldiers)+j)).dest2.y = bases[i].y;
                                 }
                                 attack(&bases[first]);
                                 bases[first].attacking_soldiers = bases[first].number_of_soldiers;
@@ -972,15 +1332,18 @@ int main() {
                 }
             }
         }
+        //event handling end============================================================================================
+        if(t % 3500 == 0){
+            z = rand() % 1000;
+            flag2 = 0;
+        }
         SDL_RenderPresent(sdlRenderer);
         SDL_Delay(1000 / FPS);
         t++;
     }
-
     save_datas(head_players);
     SDL_StopTextInput();
     SDL_DestroyWindow(sdlWindow);
-    printf("Hello World\n");
     SDL_Quit();
     return 0;
 }
