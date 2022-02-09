@@ -66,7 +66,7 @@ SDL_Texture *getImageTexture(SDL_Renderer *sdlRenderer, char *image_path) {
     return texture;
 }
 
-void generate_random_base(struct Base bases[10], Uint32 colors[5], Uint32 colors2[5]){
+void generate_random_base(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5]){
     srand(time(0));
     bases[0].x = 60;
     bases[0].y = 60;
@@ -79,7 +79,7 @@ void generate_random_base(struct Base bases[10], Uint32 colors[5], Uint32 colors
     bases[0].timer = 0;
     bases[0].soldiers = (struct Soldier*)(malloc(60 * sizeof(struct Soldier)));
     bases[0].max = 60;
-    int flag = 0;
+    int flag;
     int i = 1;
     int x, y;
     for(i; i < 5; i++) {
@@ -240,7 +240,7 @@ void generate_potion(struct Base bases[20], Uint32 colors[6], struct Potion poti
 }
 
 void generate_bases1(struct Base bases[20], Uint32 colors[5], Uint32 colors2[5]) {
-    for(int i = 0; i < 8; i++){
+    for(int i = 0; i < 8; i++) {
         bases[i].x = 200;
         bases[i].y = 35 + (i * 70);
         bases[i].color = colors[0];
@@ -706,9 +706,7 @@ void artificial_intelligence(struct Base bases[20]){
             x = rand() % 20;
             if (bases[i].number_of_soldiers >= 17) {
                 if(bases[i].max / 2 < bases[i].number_of_soldiers || bases[i].max > bases[i].number_of_soldiers * 3) {
-                    bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers,
-                                                                   bases[i].number_of_soldiers *
-                                                                   2 * sizeof(struct Soldier));
+                    bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers, bases[i].number_of_soldiers * 2 * sizeof(struct Soldier));
                     bases[i].max = 2 * bases[i].number_of_soldiers;
                 }
                 for (int j = 0; j < bases[i].number_of_soldiers; j++) {
@@ -731,9 +729,7 @@ void artificial_intelligence(struct Base bases[20]){
         }else if(i % 4 == 1 && bases[i].id != 0 && bases[i].id != 4) {
             if (bases[i].number_of_soldiers >= 22) {
                 if(bases[i].max / 2 < bases[i].number_of_soldiers || bases[i].max > bases[i].number_of_soldiers * 3) {
-                    bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers,
-                                                                   bases[i].number_of_soldiers *
-                                                                   2 * sizeof(struct Soldier));
+                    bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers, bases[i].number_of_soldiers * 2 * sizeof(struct Soldier));
                     bases[i].max = 2 * bases[i].number_of_soldiers;
                 }
                 for (int j = 0; j < 20; j++) {
@@ -761,9 +757,7 @@ void artificial_intelligence(struct Base bases[20]){
         }else if(i % 4 == 2 && bases[i].id != 0 && bases[i].id != 4){
             if(bases[i].number_of_soldiers >= 28){
                 if(bases[i].max / 2 < bases[i].number_of_soldiers || bases[i].max > bases[i].number_of_soldiers * 3) {
-                    bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers,
-                                                                   bases[i].number_of_soldiers *
-                                                                   2 * sizeof(struct Soldier));
+                    bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers, bases[i].number_of_soldiers * 2 * sizeof(struct Soldier));
                     bases[i].max = 2 * bases[i].number_of_soldiers;
                 }
                 for(int j = 0; j < 20; j++){
@@ -791,9 +785,7 @@ void artificial_intelligence(struct Base bases[20]){
         }else if(i % 4 == 3 && bases[i].id != 0 && bases[i].id != 4){
             if(bases[i].number_of_soldiers >= 9) {
                 if(bases[i].max / 2 < bases[i].number_of_soldiers || bases[i].max > bases[i].number_of_soldiers * 3) {
-                    bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers,
-                                                                   bases[i].number_of_soldiers *
-                                                                   2 * sizeof(struct Soldier));
+                    bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers, bases[i].number_of_soldiers * 2 * sizeof(struct Soldier));
                     bases[i].max = 2 * bases[i].number_of_soldiers;
                 }
                 for (int j = 0; j < 20; j++) {
@@ -820,9 +812,7 @@ void artificial_intelligence(struct Base bases[20]){
             }
         }else if(bases[i].id != 0 && bases[i].id != 4 && bases[i].number_of_soldiers >= 30){
             if(bases[i].max / 2 < bases[i].number_of_soldiers || bases[i].max > bases[i].number_of_soldiers * 3) {
-                bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers,
-                                                               bases[i].number_of_soldiers *
-                                                               2 * sizeof(struct Soldier));
+                bases[i].soldiers = (struct Soldier *) realloc(bases[i].soldiers, bases[i].number_of_soldiers * 2 * sizeof(struct Soldier));
                 bases[i].max = 2 * bases[i].number_of_soldiers;
             }
             for (int j = 0; j < 20; j++) {
