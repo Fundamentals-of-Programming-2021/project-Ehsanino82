@@ -1,2 +1,2 @@
-ali 20
-ehsan 15
+ali 15
+ehsan 20
