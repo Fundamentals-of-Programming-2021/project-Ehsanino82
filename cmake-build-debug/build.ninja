@@ -49,8 +49,29 @@ cmake_ninja_workdir = D$:/ehsan/project-Ehsanino82/cmake-build-debug/
 
 build cmake_object_order_depends_target_project_Ehsanino82: phony || CMakeFiles/project_Ehsanino82.dir
 
+build CMakeFiles/project_Ehsanino82.dir/src/logic.c.obj: C_COMPILER__project_Ehsanino82_Debug D$:/ehsan/project-Ehsanino82/src/logic.c || cmake_object_order_depends_target_project_Ehsanino82
+  DEP_FILE = CMakeFiles\project_Ehsanino82.dir\src\logic.c.obj.d
+  FLAGS = -g -std=gnu99
+  INCLUDES = -ID:/ehsan/project-Ehsanino82/sdl2/sdl2-include -ID:/ehsan/project-Ehsanino82/sdl2/sdl2-gfx-include
+  OBJECT_DIR = CMakeFiles\project_Ehsanino82.dir
+  OBJECT_FILE_DIR = CMakeFiles\project_Ehsanino82.dir\src
+
 build CMakeFiles/project_Ehsanino82.dir/src/main.c.obj: C_COMPILER__project_Ehsanino82_Debug D$:/ehsan/project-Ehsanino82/src/main.c || cmake_object_order_depends_target_project_Ehsanino82
   DEP_FILE = CMakeFiles\project_Ehsanino82.dir\src\main.c.obj.d
+  FLAGS = -g -std=gnu99
+  INCLUDES = -ID:/ehsan/project-Ehsanino82/sdl2/sdl2-include -ID:/ehsan/project-Ehsanino82/sdl2/sdl2-gfx-include
+  OBJECT_DIR = CMakeFiles\project_Ehsanino82.dir
+  OBJECT_FILE_DIR = CMakeFiles\project_Ehsanino82.dir\src
+
+build CMakeFiles/project_Ehsanino82.dir/src/maps.c.obj: C_COMPILER__project_Ehsanino82_Debug D$:/ehsan/project-Ehsanino82/src/maps.c || cmake_object_order_depends_target_project_Ehsanino82
+  DEP_FILE = CMakeFiles\project_Ehsanino82.dir\src\maps.c.obj.d
+  FLAGS = -g -std=gnu99
+  INCLUDES = -ID:/ehsan/project-Ehsanino82/sdl2/sdl2-include -ID:/ehsan/project-Ehsanino82/sdl2/sdl2-gfx-include
+  OBJECT_DIR = CMakeFiles\project_Ehsanino82.dir
+  OBJECT_FILE_DIR = CMakeFiles\project_Ehsanino82.dir\src
+
+build CMakeFiles/project_Ehsanino82.dir/src/players.c.obj: C_COMPILER__project_Ehsanino82_Debug D$:/ehsan/project-Ehsanino82/src/players.c || cmake_object_order_depends_target_project_Ehsanino82
+  DEP_FILE = CMakeFiles\project_Ehsanino82.dir\src\players.c.obj.d
   FLAGS = -g -std=gnu99
   INCLUDES = -ID:/ehsan/project-Ehsanino82/sdl2/sdl2-include -ID:/ehsan/project-Ehsanino82/sdl2/sdl2-gfx-include
   OBJECT_DIR = CMakeFiles\project_Ehsanino82.dir
@@ -64,7 +85,7 @@ build CMakeFiles/project_Ehsanino82.dir/src/main.c.obj: C_COMPILER__project_Ehsa
 #############################################
 # Link the executable project_Ehsanino82.exe
 
-build project_Ehsanino82.exe: C_EXECUTABLE_LINKER__project_Ehsanino82_Debug CMakeFiles/project_Ehsanino82.dir/src/main.c.obj | ../sdl2/sdl2-lib/libSDL2.a ../sdl2/sdl2-lib/libSDL2main.a ../sdl2/sdl2-gfx-lib/libsdl-gfx.a
+build project_Ehsanino82.exe: C_EXECUTABLE_LINKER__project_Ehsanino82_Debug CMakeFiles/project_Ehsanino82.dir/src/logic.c.obj CMakeFiles/project_Ehsanino82.dir/src/main.c.obj CMakeFiles/project_Ehsanino82.dir/src/maps.c.obj CMakeFiles/project_Ehsanino82.dir/src/players.c.obj | ../sdl2/sdl2-lib/libSDL2.a ../sdl2/sdl2-lib/libSDL2main.a ../sdl2/sdl2-gfx-lib/libsdl-gfx.a
   FLAGS = -g
   LINK_LIBRARIES = ../sdl2/sdl2-lib/libSDL2.a  ../sdl2/sdl2-lib/libSDL2main.a  ../sdl2/sdl2-gfx-lib/libsdl-gfx.a  -lm  -ldinput8  -ldxguid  -ldxerr8  -luser32  -lgdi32  -lwinmm  -limm32  -lole32  -loleaut32  -lshell32  -lversion  -luuid  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\project_Ehsanino82.dir

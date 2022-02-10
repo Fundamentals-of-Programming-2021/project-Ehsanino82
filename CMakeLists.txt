@@ -1,4 +1,4 @@
-set(SOURCE src/main.c)
+set(SOURCE src/main.c src/maps.h src/maps.c src/logic.h src/logic.c src/players.h src/players.c)
 set(PROJECT_NAME project_Ehsanino82)
 
 cmake_minimum_required(VERSION 3.21)
